@@ -14,5 +14,5 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::startScan() {
-    lifxLAN.scan();
+    lifxLAN.startScan();
 }

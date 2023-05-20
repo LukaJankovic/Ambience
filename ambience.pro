@@ -10,12 +10,14 @@ CONFIG += c++17
 
 SOURCES += \
     lifxlan.cpp \
+    lifxpacket.cpp \
     light.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     lifxlan.h \
+    lifxpacket.h \
     light.h \
     mainwindow.h
 

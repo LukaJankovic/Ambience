@@ -3,7 +3,9 @@
 
 #include <QObject>
 #include <QtNetwork>
+#include <QDebug>
 
+#include "lifxpacket.h"
 #include "light.h"
 
 class LifxLAN : public QObject
@@ -13,17 +15,14 @@ public:
     explicit LifxLAN(QObject *parent = nullptr);
     ~LifxLAN();
 
-    QList<Light> scan();
+    void startScan();
 
 private:
-    QUdpSocket *udpSocket;
+    QUdpSocket *scanSocket;
 
-    QByteArray getFrameHeader();
-    QByteArray getFrameAddress();
-    QByteArray getFrameAddress(const QList<quint8> &target);
-    QByteArray getProtocolHeader(quint16 msg);
 
-    void fixHeaderSize(QByteArray &packet);
+private slots:
+    void scanResponse();
 };
 
 #endif // LIFXLAN_H
