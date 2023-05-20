@@ -4,9 +4,7 @@
 #include <QMainWindow>
 #include <QtNetwork>
 
-#include <iostream>
-
-const qsizetype LIFX_LAN_HEADER_SIZE = 8;
+#include "lifxlan.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -21,7 +19,7 @@ public:
     ~MainWindow();
 
 private:
-    QUdpSocket *udpSocket;
+    LifxLAN lifxLAN;
     Ui::MainWindow *ui;
 
     QByteArray getLIFXFrameHeader();
