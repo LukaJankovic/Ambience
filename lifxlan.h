@@ -18,9 +18,11 @@ public:
     void startScan();
 
 private:
-    QUdpSocket *scanSocket;
-    QHash<QHostAddress, Light> devices;
+    QUdpSocket *socket;
+    QHash<QHostAddress, Light*> scanned;
 
+signals:
+    void scanFoundLight(Light *light);
 
 private slots:
     void messageReceived();

@@ -3,13 +3,13 @@
 LifxLAN::LifxLAN(QObject *parent)
     : QObject{parent}
 {
-    scanSocket = new QUdpSocket(this);
-    scanSocket->bind(56700);
+    socket = new QUdpSocket(this);
+    socket->bind(56700);
 }
 
 LifxLAN::~LifxLAN()
 {
-    delete scanSocket;
+    delete socket;
 }
 
 /*
@@ -22,16 +22,16 @@ LifxLAN::~LifxLAN()
  */
 void LifxLAN::startScan()
 {
-    devices.clear();
+    scanned.clear();
 
-    QObject::connect(scanSocket, &QUdpSocket::readyRead, this, &LifxLAN::messageReceived);
+    QObject::connect(socket, &QUdpSocket::readyRead, this, &LifxLAN::messageReceived);
 
     QByteArray message = LifxPacket::getFrameHeader(true);
     message.append(LifxPacket::getFrameAddress());
     message.append(LifxPacket::getProtocolHeader(2));
     LifxPacket::fixHeaderSize(message);
 
-    scanSocket->writeDatagram(message, QHostAddress::Broadcast, 56700);
+    socket->writeDatagram(message, QHostAddress::Broadcast, 56700);
 }
 
 /*
@@ -47,22 +47,27 @@ void LifxLAN::startScan()
  */
 void LifxLAN::messageReceived()
 {
-    if(scanSocket->hasPendingDatagrams())
+    if(socket->hasPendingDatagrams())
     {
-        QNetworkDatagram datagram = scanSocket->receiveDatagram();
-
+        QNetworkDatagram datagram = socket->receiveDatagram();
+        QHostAddress senderAddress = datagram.senderAddress();
         QByteArray data = datagram.data();
 
-        if (LifxPacket::getMessageType(data) != 3) return;
+        if (scanned.contains(senderAddress))
+        {
+            scanned[senderAddress]->processPacket(data);
+        }
 
-        QHostAddress address = datagram.senderAddress();
-        QList<quint8> serial = LifxPacket::getSerial(data);
+        else
+        {
+            if (LifxPacket::getMessageType(data) != 3) return;
 
-        Light light(address, serial);
+            QList<quint8> serial = LifxPacket::getSerial(data);
 
-        //devices.append(datagram.senderAddress());
+            Light *light = new Light(senderAddress, serial, socket);
+            scanned[senderAddress] = light;
+
+            emit scanFoundLight(light);
+        }
     }
-
-    // TODO: Implement slot-signal
-    // TODO: keep track of found devices
 }

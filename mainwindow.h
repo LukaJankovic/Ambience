@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QtNetwork>
 
+#include "light.h"
 #include "lifxlan.h"
 
 QT_BEGIN_NAMESPACE
@@ -29,5 +30,7 @@ private:
 
 private slots:
     void startScan();
+    void scanFoundLight(Light *light);
+    void scanLightLabelUpdated(Light *light, QString label);
 };
 #endif // MAINWINDOW_H

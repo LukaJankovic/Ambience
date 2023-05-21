@@ -50,7 +50,7 @@ QByteArray LifxPacket::getFrameAddress(const QList<quint8> &target)
 
     quint8 res_ack = 0;
 
-    res_ack |= (1 << 1);
+    //res_ack |= (1 << 1);
 
     address.append(res_ack);
     address.append((char) 0);
@@ -146,4 +146,16 @@ QByteArray LifxPacket::getPayload(const QByteArray &packet)
     }
 
     return payload;
+}
+
+/*!
+ * \brief LifxPacket::trimPayload Removes null characters from payload.
+ * \param payload Payload to be processed.
+ * \return Payload excluding null characters.
+ */
+QByteArray LifxPacket::trimPayload(const QByteArray &payload)
+{
+    int nullIndex = payload.indexOf('\0');
+    if (nullIndex == -1) return payload;
+    return payload.left(nullIndex);
 }
