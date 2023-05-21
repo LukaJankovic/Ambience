@@ -6,6 +6,8 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    QObject::connect(&lifxLAN, &LifxLAN::scanFoundLight, this, &MainWindow::scanFoundLight);
 }
 
 MainWindow::~MainWindow()
@@ -15,7 +17,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::startScan()
 {
-    QObject::connect(&lifxLAN, &LifxLAN::scanFoundLight, this, &MainWindow::scanFoundLight);
     lifxLAN.startScan();
 }
 

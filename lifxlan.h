@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QtNetwork>
-#include <QDebug>
+#include <QtAlgorithms>
 
 #include "lifxpacket.h"
 #include "light.h"

@@ -22,6 +22,7 @@ LifxLAN::~LifxLAN()
  */
 void LifxLAN::startScan()
 {
+    qDeleteAll(scanned.begin(), scanned.end());
     scanned.clear();
 
     QObject::connect(socket, &QUdpSocket::readyRead, this, &LifxLAN::messageReceived);
