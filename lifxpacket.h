@@ -15,7 +15,8 @@ public:
     static void fixHeaderSize(QByteArray &packet);
 
     static QList<quint8> getSerial(const QByteArray &packet);
-
+    static quint8 getMessageType(const QByteArray &packet);
+    static QByteArray getPayload(const QByteArray &packet);
 };
 
 #endif // LIFXPACKET_H

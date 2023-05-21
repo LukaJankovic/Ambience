@@ -14,14 +14,13 @@ public:
     explicit Light(QObject *parent = nullptr);
     Light(const QHostAddress &address, const QList<quint8> &serial);
 
+    void processPacket(const QByteArray &packet);
+
 private:
-    QUdpSocket *udpSocket;
 
     QString label;
     QHostAddress address;
     QList<quint8> serial;
-
-signals:
 
 };
 

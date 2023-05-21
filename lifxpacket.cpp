@@ -41,7 +41,8 @@ QByteArray LifxPacket::getFrameAddress(const QList<quint8> &target)
 
     QByteArray address;
 
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 6; i++)
+    {
         address.append(target[i]);
     }
 
@@ -111,9 +112,38 @@ QList<quint8> LifxPacket::getSerial(const QByteArray &packet)
 {
     QList<quint8> serial;
 
-    for (int i = 8; i < 14; i++) {
+    for (int i = 8; i < 14; i++)
+    {
         serial.append(packet.at(i));
     }
 
     return serial;
+}
+
+/*!
+ * \brief LifxPacket::getMessageType Gets the message type from a packet.
+ * \param packet Packet to be decoded.
+ * \return Returns the message type number.
+ */
+quint8 LifxPacket::getMessageType(const QByteArray &packet)
+{
+    auto messageType = packet.at(32);
+    return messageType;
+}
+
+/*!
+ * \brief LifxPacket::getPayload Gets the payload from the packet.
+ * \param packet Packet to be decoded
+ * \return Returns the payload in the form of a byte array.
+ */
+QByteArray LifxPacket::getPayload(const QByteArray &packet)
+{
+    QByteArray payload;
+
+    for (int i = 36; i < packet.size(); i++)
+    {
+        payload.append(packet.at(i));
+    }
+
+    return payload;
 }

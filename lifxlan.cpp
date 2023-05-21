@@ -22,14 +22,16 @@ LifxLAN::~LifxLAN()
  */
 void LifxLAN::startScan()
 {
-    QByteArray message = LifxPacket::getFrameHeader(false);
+    devices.clear();
+
+    QObject::connect(scanSocket, &QUdpSocket::readyRead, this, &LifxLAN::messageReceived);
+
+    QByteArray message = LifxPacket::getFrameHeader(true);
     message.append(LifxPacket::getFrameAddress());
     message.append(LifxPacket::getProtocolHeader(2));
     LifxPacket::fixHeaderSize(message);
 
     scanSocket->writeDatagram(message, QHostAddress::Broadcast, 56700);
-
-    QObject::connect(scanSocket, &QUdpSocket::readyRead, this, &LifxLAN::scanResponse);
 }
 
 /*
@@ -43,18 +45,22 @@ void LifxLAN::startScan()
 /*!
  * \brief LifxLAN::scanResponse Called whenever a device responds to a scan.
  */
-void LifxLAN::scanResponse()
+void LifxLAN::messageReceived()
 {
-    qInfo() << "response received!\n";
-
-    while (scanSocket->hasPendingDatagrams()) {
+    if(scanSocket->hasPendingDatagrams())
+    {
         QNetworkDatagram datagram = scanSocket->receiveDatagram();
+
         QByteArray data = datagram.data();
+
+        if (LifxPacket::getMessageType(data) != 3) return;
 
         QHostAddress address = datagram.senderAddress();
         QList<quint8> serial = LifxPacket::getSerial(data);
 
         Light light(address, serial);
+
+        //devices.append(datagram.senderAddress());
     }
 
     // TODO: Implement slot-signal

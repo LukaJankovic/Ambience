@@ -19,10 +19,11 @@ public:
 
 private:
     QUdpSocket *scanSocket;
+    QHash<QHostAddress, Light> devices;
 
 
 private slots:
-    void scanResponse();
+    void messageReceived();
 };
 
 #endif // LIFXLAN_H
