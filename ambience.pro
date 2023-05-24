@@ -13,16 +13,19 @@ SOURCES += \
     lifxpacket.cpp \
     light.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    scanwindow.cpp
 
 HEADERS += \
     lifxlan.h \
     lifxpacket.h \
     light.h \
-    mainwindow.h
+    mainwindow.h \
+    scanwindow.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    scanwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

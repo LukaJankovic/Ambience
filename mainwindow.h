@@ -1,11 +1,14 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QStandardItemModel>
 #include <QMainWindow>
 #include <QtNetwork>
 
 #include "light.h"
 #include "lifxlan.h"
+
+#include "scanwindow.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -20,17 +23,13 @@ public:
     ~MainWindow();
 
 private:
-    LifxLAN lifxLAN;
     Ui::MainWindow *ui;
 
-    QByteArray getLIFXFrameHeader();
-    QByteArray getLIFXFrameAddress();
-    QByteArray getLIFXFrameAddress(const std::vector<quint8> &target);
-    QByteArray getLIFXProtocolHeader(quint16 msg);
+    QMenu *fileMenu;
+    QAction *scanAction;
 
-private slots:
-    void startScan();
-    void scanFoundLight(Light *light);
-    void scanLightLabelUpdated(Light *light, QString label);
+    void setupMenuBar();
+
+    void openScanDialog();
 };
 #endif // MAINWINDOW_H
