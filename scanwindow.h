@@ -32,6 +32,8 @@ private slots:
     void startScan();
     void scanFoundLight(Light *light);
     void scanLightLabelUpdated(Light *light, QString label);
+
+    void accept();
 };
 
 #endif // SCANWINDOW_H

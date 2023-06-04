@@ -7,6 +7,23 @@ Light::~Light()
 {
 }
 
+QVariantMap Light::toVariantMap() const
+{
+    QVariantMap map;
+    map["label"] = label;
+    map["address"] = address.toString();
+
+    QString serialString;
+
+    for (const auto& item : serial)
+    {
+        serialString.append(static_cast<char>(item));
+    }
+
+    map["serial"] = serialString;
+    return map;
+}
+
 Light::Light(const QHostAddress &address, const QList<quint8> &serial, QUdpSocket *socket) : address(address),
     serial(serial) , socket(socket)
 {
@@ -16,6 +33,16 @@ Light::Light(const QHostAddress &address, const QList<quint8> &serial, QUdpSocke
     LifxPacket::fixHeaderSize(message);
 
     socket->writeDatagram(message, address, 56700);
+}
+
+Light::Light(const QVariantMap &map)
+{
+    label = map["label"].toString();
+    address = QHostAddress(map["address"].toString());
+    for (const auto& ch : map["serial"].value<QList<quint8>>())
+    {
+        serial.append(ch);
+    }
 }
 
 /*!

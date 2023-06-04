@@ -25,10 +25,14 @@ public:
 private:
     Ui::MainWindow *ui;
 
+    QStandardItemModel *lightsModel;
+
     QMenu *fileMenu;
     QAction *scanAction;
 
     void setupMenuBar();
+
+    void showLightsList();
 
     void openScanDialog();
 };

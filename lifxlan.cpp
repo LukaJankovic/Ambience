@@ -5,6 +5,10 @@ LifxLAN::LifxLAN(QObject *parent)
 {
     socket = new QUdpSocket(this);
     socket->bind(56700);
+
+    qRegisterMetaType<QList<quint8>>("QList<quint8>");
+    QMetaType::registerConverter<QList<quint8>, QVariantList>(&convertToVariantList);
+    QMetaType::registerConverter<QVariantList, QList<quint8>>(&convertFromVariantList);
 }
 
 LifxLAN::~LifxLAN()
@@ -71,4 +75,22 @@ void LifxLAN::messageReceived()
             emit scanFoundLight(light);
         }
     }
+}
+
+QVariantList convertToVariantList(const QList<quint8>& list)
+{
+    QVariantList variantList;
+    for (const quint8 item : list) {
+        variantList.append(QVariant(item));
+    }
+    return variantList;
+}
+
+QList<quint8> convertFromVariantList(const QVariantList& variantList)
+{
+    QList<quint8> list;
+    for (const QVariant& variant : variantList) {
+        list.append(variant.toUInt());
+    }
+    return list;
 }

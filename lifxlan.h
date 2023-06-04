@@ -28,4 +28,7 @@ private slots:
     void messageReceived();
 };
 
+QVariantList convertToVariantList(const QList<quint8>& list);
+QList<quint8> convertFromVariantList(const QVariantList& variantList);
+
 #endif // LIFXLAN_H

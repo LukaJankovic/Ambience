@@ -1,6 +1,10 @@
 #include "scanwindow.h"
 #include "ui_scanwindow.h"
 
+enum CustomRoles {
+    ObjectRole = Qt::UserRole + 1
+};
+
 ScanWindow::ScanWindow(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ScanWindow)
@@ -47,5 +51,19 @@ void ScanWindow::scanFoundLight(Light *light)
 
 void ScanWindow::scanLightLabelUpdated(Light *light, QString label)
 {
-    scanModel->appendRow(new QStandardItem(label));
+    QStandardItem *row = new QStandardItem(label);
+    row->setData(QVariant::fromValue(light), ObjectRole);
+
+    scanModel->appendRow(row);
+}
+
+void ScanWindow::accept()
+{
+    QModelIndex currentIndex = ui->scanListView->currentIndex();
+    Light *light = currentIndex.data(ObjectRole).value<Light *>();
+
+    QSettings settings;
+    QVariantList lights = settings.value("lights").toList();
+    lights.append(light->toVariantMap());
+    settings.setValue("lights", lights);
 }
