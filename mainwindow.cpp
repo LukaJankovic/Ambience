@@ -9,6 +9,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     lightsModel = new QStandardItemModel(this);
     ui->lightsList->setModel(lightsModel);
+    ui->lightsList->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->lightsList,
+            &QTreeWidget::customContextMenuRequested,
+            this,
+            &MainWindow::showLightContextMenu);
 
     setupMenuBar();
 
@@ -25,12 +30,36 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+/*!
+ * \brief MainWindow::showLightContextMenu Sets up and shows context menu for lights.
+ * \param point Where to show the context menu.
+ */
+void MainWindow::showLightContextMenu(const QPoint &point)
+{
+    QModelIndex index = ui->lightsList->indexAt(point);
+    if (index.isValid())
+    {
+        QMenu *lightMenu = new QMenu();
+
+        QAction *removeLightAction = new QAction("Remove light", this);
+
+        lightMenu->addAction(removeLightAction);
+
+        QPoint globalPos = ui->lightsList->viewport()->mapToGlobal(point);
+        QAction *selectedAction = lightMenu->exec(globalPos);
+
+        if (selectedAction == removeLightAction) {
+            removeLight(index);
+        }
+    }
+}
+
 /*
  * Private functions
  */
 
 /*!
- * \brief setupMenuBar Setus up menu bar options.
+ * \brief MainWindow::setupMenuBar Setus up menu bar options.
  */
 void MainWindow::setupMenuBar()
 {
@@ -44,6 +73,9 @@ void MainWindow::setupMenuBar()
     menuBar()->addMenu(fileMenu);
 }
 
+/*!
+ * \brief MainWindow::showLightsList Shows lights from user settings.
+ */
 void MainWindow::showLightsList()
 {
     QSettings settings;
@@ -60,7 +92,20 @@ void MainWindow::showLightsList()
 }
 
 /*!
- * \brief openScanDialog Opens dialog to add new lights.
+ * \brief MainWindow::removeLight Removes light from treeView and from user settings.
+ * \param index Index of light to be removed.
+ */
+void MainWindow::removeLight(QModelIndex index)
+{
+    lightsModel->removeRow(index.row());
+    QSettings settings;
+    QVariantList lights = settings.value("lights").toList();
+    lights.removeAt(index.row());
+    settings.setValue("lights", lights);
+}
+
+/*!
+ * \brief MainWindow::openScanDialog Opens dialog to add new lights.
  */
 void MainWindow::openScanDialog()
 {

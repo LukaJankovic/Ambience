@@ -3,6 +3,7 @@
 
 #include <QStandardItemModel>
 #include <QMainWindow>
+#include <QTreeWidget>
 #include <QtNetwork>
 
 #include "light.h"
@@ -22,6 +23,8 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void showLightContextMenu(const QPoint &pos);
+
 private:
     Ui::MainWindow *ui;
 
@@ -33,6 +36,7 @@ private:
     void setupMenuBar();
 
     void showLightsList();
+    void removeLight(QModelIndex index);
 
     void openScanDialog();
 };

@@ -21,7 +21,7 @@ LifxLAN::~LifxLAN()
  */
 
 /*!
- * \brief startScan begins a scan for LIFX devices on the network.
+ * \brief LifxLAN::startScan begins a scan for LIFX devices on the network.
  * \return List of found devices.
  */
 void LifxLAN::startScan()
@@ -76,6 +76,10 @@ void LifxLAN::messageReceived()
         }
     }
 }
+
+/*
+ * Helper functions.
+ */
 
 QVariantList convertToVariantList(const QList<quint8>& list)
 {
