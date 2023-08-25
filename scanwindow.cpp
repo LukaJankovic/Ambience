@@ -48,7 +48,7 @@ void ScanWindow::startScan()
  */
 
 /*!
- * \brief ScanWindow::scanFoundLight called to attach label update to found light.
+ * \brief Called when light found to attach label update function.
  * \param light object representing physical LIFX light.
  */
 void ScanWindow::scanFoundLight(Light *light)
@@ -57,7 +57,7 @@ void ScanWindow::scanFoundLight(Light *light)
 }
 
 /*!
- * \brief ScanWindow::scanLightLabelUpdated called when label for light is received.
+ * \brief Called when label for light is received.
  *
  * Creates a row for the light and adds it to the list model.
  *
@@ -73,7 +73,7 @@ void ScanWindow::scanLightLabelUpdated(Light *light, QString label)
 }
 
 /*!
- * \brief ScanWindow::accept called when user presses accept.
+ * \brief Called when user presses accept.
  *
  * Adds selected light to settings.
  */

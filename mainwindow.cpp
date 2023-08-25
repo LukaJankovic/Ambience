@@ -31,7 +31,7 @@ MainWindow::~MainWindow()
 }
 
 /*!
- * \brief MainWindow::showLightContextMenu Sets up and shows context menu for lights.
+ * \brief Sets up and shows context menu for lights.
  * \param point Where to show the context menu.
  */
 void MainWindow::showLightContextMenu(const QPoint &point)
@@ -69,7 +69,7 @@ void MainWindow::scanDone(int r)
  */
 
 /*!
- * \brief MainWindow::setupMenuBar Setus up menu bar options.
+ * \brief Setus up menu bar options.
  */
 void MainWindow::setupMenuBar()
 {
@@ -84,7 +84,7 @@ void MainWindow::setupMenuBar()
 }
 
 /*!
- * \brief MainWindow::showLightsList Shows lights from user settings.
+ * \brief Shows lights from user settings.
  */
 void MainWindow::showLightsList()
 {
@@ -102,7 +102,7 @@ void MainWindow::showLightsList()
 }
 
 /*!
- * \brief MainWindow::removeLight Removes light from treeView and from user settings.
+ * \brief Removes light from treeView and from user settings.
  * \param index Index of light to be removed.
  */
 void MainWindow::removeLight(QModelIndex index)
@@ -115,7 +115,7 @@ void MainWindow::removeLight(QModelIndex index)
 }
 
 /*!
- * \brief MainWindow::openScanDialog Opens dialog to add new lights.
+ * \brief Opens dialog to add new lights.
  */
 void MainWindow::openScanDialog()
 {

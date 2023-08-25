@@ -21,7 +21,7 @@ LifxLAN::~LifxLAN()
  */
 
 /*!
- * \brief LifxLAN::startScan begins a scan for LIFX devices on the network.
+ * \brief Begins a scan for LIFX devices on the network.
  * \return List of found devices.
  */
 void LifxLAN::startScan()
@@ -48,7 +48,7 @@ void LifxLAN::startScan()
  */
 
 /*!
- * \brief LifxLAN::scanResponse Called whenever a device responds to a scan.
+ * \brief Called whenever a device responds to a scan.
  */
 void LifxLAN::messageReceived()
 {

@@ -1,7 +1,7 @@
 #include "lifxpacket.h"
 
 /*!
- * \brief LifxPacket::getFrameHeader Generates a LIFX-compatible frame header. Size is set to 0.
+ * \brief Creates a LIFX-compatible frame header. Size is set to 0.
  * \param tagged Determines whether the target field should be used.
  * \return byte array representing the header.
  */
@@ -32,7 +32,7 @@ QByteArray LifxPacket::getFrameHeader(bool tagged)
 }
 
 /*!
- * \brief LifxPacket::getFrameAddress Generates a LIFX-compatible frame address.
+ * \brief Generates a LIFX-compatible frame address.
  * \param target 6 quint8 values representing the MAC-address of the target device.
  * \return byte array representing the frame address.
  */
@@ -59,7 +59,7 @@ QByteArray LifxPacket::getFrameAddress(const QList<quint8> &target)
 }
 
 /*!
- * \brief LifxPacket::getFrameAddress Generates LIFX-compatible frame address targeting all devices.
+ * \brief Generates LIFX-compatible frame address targeting all devices.
  * \return byte array representing the frame address.
  */
 QByteArray LifxPacket::getFrameAddress()
@@ -72,7 +72,7 @@ QByteArray LifxPacket::getFrameAddress()
 }
 
 /*!
- * \brief LifxPacket::getProtocolHeader Generates a LIFX-compatible protocol header.
+ * \brief Generates a LIFX-compatible protocol header.
  * \param msg The message type to be sent.
  * \return byte array representing the protocol header.
  */
@@ -92,7 +92,7 @@ QByteArray LifxPacket::getProtocolHeader(quint16 msg)
 }
 
 /*!
- * \brief LifxPacket::fixHeaderSize Updates the size field in the packet.
+ * \brief Updates the size field in the packet.
  * \param packet Byte array of the packet to be modified.
  */
 void LifxPacket::fixHeaderSize(QByteArray &packet)
@@ -104,7 +104,7 @@ void LifxPacket::fixHeaderSize(QByteArray &packet)
 }
 
 /*!
- * \brief LifxPacket::getSerial Gets the serial number from a packet.
+ * \brief Gets the serial number from a packet.
  * \param packet Packet to be decoded.
  * \return Returns the serial number in the form of a byte array.
  */
@@ -121,7 +121,7 @@ QList<quint8> LifxPacket::getSerial(const QByteArray &packet)
 }
 
 /*!
- * \brief LifxPacket::getMessageType Gets the message type from a packet.
+ * \brief Gets the message type from a packet.
  * \param packet Packet to be decoded.
  * \return Returns the message type number.
  */
@@ -132,7 +132,7 @@ quint8 LifxPacket::getMessageType(const QByteArray &packet)
 }
 
 /*!
- * \brief LifxPacket::getPayload Gets the payload from the packet.
+ * \brief Gets the payload from the packet.
  * \param packet Packet to be decoded
  * \return Returns the payload in the form of a byte array.
  */
@@ -149,7 +149,7 @@ QByteArray LifxPacket::getPayload(const QByteArray &packet)
 }
 
 /*!
- * \brief LifxPacket::trimPayload Removes null characters from payload.
+ * \brief Removes null characters from payload.
  * \param payload Payload to be processed.
  * \return Payload excluding null characters.
  */

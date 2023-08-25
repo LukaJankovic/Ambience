@@ -46,7 +46,7 @@ Light::Light(const QVariantMap &map)
 }
 
 /*!
- * \brief Light::processPacket Called by lifxlan whenever the corresponding physical device sent data to this object.
+ * \brief called by lifxlan whenever the corresponding physical device sent data to this object.
  * \param packet Packet from the device to be processed.
  */
 void Light::processPacket(const QByteArray &packet)
