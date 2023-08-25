@@ -1,6 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+static QStringList headerLabels = {"Name",
+                                   "Status",
+                                   "Brightness"};
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -14,6 +18,9 @@ MainWindow::MainWindow(QWidget *parent)
             &QTreeWidget::customContextMenuRequested,
             this,
             &MainWindow::showLightContextMenu);
+
+    lightsModel->setColumnCount(headerLabels.count());
+    lightsModel->setHorizontalHeaderLabels(headerLabels);
 
     setupMenuBar();
 
@@ -94,10 +101,16 @@ void MainWindow::showLightsList()
     {
         Light *l = new Light(light.toMap());
 
-        QStandardItem *row = new QStandardItem(l->getLabel());
-        row->setData(QVariant::fromValue(l));
+        QStandardItem *label = new QStandardItem(l->getLabel());
+        label->setData(QVariant::fromValue(l));
 
-        lightsModel->appendRow(row);
+        QStandardItem *brightness = new QStandardItem(QString::number(l->getBrightness()));
+        brightness->setData(QVariant::fromValue(l));
+
+        QStandardItem *power = new QStandardItem(QString::number(l->getPower()));
+        power->setData(QVariant::fromValue(l));
+
+        lightsModel->appendRow({label, power, brightness});
     }
 }
 
