@@ -34,6 +34,9 @@ ScanWindow::~ScanWindow()
  * Private functions
  */
 
+/*!
+ * \brief ScanWindow::startScan calls lifxLAN to send UDP scan.
+ */
 void ScanWindow::startScan()
 {
     scanModel->removeRows(0, scanModel->rowCount());
@@ -44,11 +47,23 @@ void ScanWindow::startScan()
  * Private slots
  */
 
+/*!
+ * \brief ScanWindow::scanFoundLight called to attach label update to found light.
+ * \param light object representing physical LIFX light.
+ */
 void ScanWindow::scanFoundLight(Light *light)
 {
     QObject::connect(light, &Light::labelUpdated, this, &ScanWindow::scanLightLabelUpdated);
 }
 
+/*!
+ * \brief ScanWindow::scanLightLabelUpdated called when label for light is received.
+ *
+ * Creates a row for the light and adds it to the list model.
+ *
+ * \param light object representing physical LIFX light.
+ * \param label string containing received light label.
+ */
 void ScanWindow::scanLightLabelUpdated(Light *light, QString label)
 {
     QStandardItem *row = new QStandardItem(label);
@@ -57,6 +72,11 @@ void ScanWindow::scanLightLabelUpdated(Light *light, QString label)
     scanModel->appendRow(row);
 }
 
+/*!
+ * \brief ScanWindow::accept called when user presses accept.
+ *
+ * Adds selected light to settings.
+ */
 void ScanWindow::accept()
 {
     QModelIndex currentIndex = ui->scanListView->currentIndex();

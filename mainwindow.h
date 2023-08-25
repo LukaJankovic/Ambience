@@ -25,6 +25,9 @@ public:
 
     void showLightContextMenu(const QPoint &pos);
 
+public slots:
+    void scanDone(int r);
+
 private:
     Ui::MainWindow *ui;
 

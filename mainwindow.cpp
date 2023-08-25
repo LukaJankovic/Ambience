@@ -55,6 +55,16 @@ void MainWindow::showLightContextMenu(const QPoint &point)
 }
 
 /*
+ * Public slots
+ */
+
+void MainWindow::scanDone(int r)
+{
+    lightsModel->clear();
+    showLightsList();
+}
+
+/*
  * Private functions
  */
 
@@ -110,5 +120,8 @@ void MainWindow::removeLight(QModelIndex index)
 void MainWindow::openScanDialog()
 {
     ScanWindow *scanWindow = new ScanWindow();
+
+    connect(scanWindow, &QDialog::finished, this, &MainWindow::scanDone);
+
     scanWindow->show();
 }
