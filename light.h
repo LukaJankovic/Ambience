@@ -23,12 +23,22 @@ public:
     QString getLabel() const;
 
 
+    bool getPower() const;
+
+    int getBrightness() const;
+
 private:
+
+    // Basic info
     QString label;
     QHostAddress address;
     QList<quint8> serial;
 
     QUdpSocket *socket;
+
+    // Light status
+    bool power = true;
+    int brightness = 56;
 
 signals:
     void labelUpdated(Light *light, QString label);

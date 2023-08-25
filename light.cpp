@@ -64,7 +64,21 @@ void Light::processPacket(const QByteArray &packet)
     }
 }
 
+/*
+ * Getters
+ */
+
 QString Light::getLabel() const
 {
     return label;
+}
+
+bool Light::getPower() const
+{
+    return power;
+}
+
+int Light::getBrightness() const
+{
+    return brightness;
 }
