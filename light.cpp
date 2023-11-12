@@ -82,3 +82,8 @@ int Light::getBrightness() const
 {
     return brightness;
 }
+
+QHostAddress Light::getAddress() const
+{
+    return address;
+}

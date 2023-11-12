@@ -17,6 +17,7 @@ class ScanWindow : public QDialog
 
 public:
     explicit ScanWindow(QWidget *parent = nullptr);
+    ScanWindow(LifxLAN *lifxLAN, QWidget *parent = nullptr);
     ~ScanWindow();
 
 private:
@@ -25,7 +26,7 @@ private:
     QPushButton *scanButton;
     QStandardItemModel *scanModel;
 
-    LifxLAN lifxLAN;
+    LifxLAN *lifxLAN;
 
 
 private slots:

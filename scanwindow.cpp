@@ -10,8 +10,16 @@ ScanWindow::ScanWindow(QWidget *parent) :
     ui(new Ui::ScanWindow)
 {
     ui->setupUi(this);
+}
 
-    QObject::connect(&lifxLAN, &LifxLAN::scanFoundLight, this, &ScanWindow::scanFoundLight);
+ScanWindow::ScanWindow(LifxLAN *lifxLAN, QWidget *parent) :
+    lifxLAN(lifxLAN),
+    QDialog(parent),
+    ui(new Ui::ScanWindow)
+{
+    ui->setupUi(this);
+
+    QObject::connect(lifxLAN, &LifxLAN::scanFoundLight, this, &ScanWindow::scanFoundLight);
 
     scanModel = new QStandardItemModel(this);
     ui->scanListView->setModel(scanModel);
@@ -40,7 +48,7 @@ ScanWindow::~ScanWindow()
 void ScanWindow::startScan()
 {
     scanModel->removeRows(0, scanModel->rowCount());
-    lifxLAN.startScan();
+    lifxLAN->startScan();
 }
 
 /*
@@ -82,8 +90,5 @@ void ScanWindow::accept()
     QModelIndex currentIndex = ui->scanListView->currentIndex();
     Light *light = currentIndex.data(ObjectRole).value<Light *>();
 
-    QSettings settings;
-    QVariantList lights = settings.value("lights").toList();
-    lights.append(light->toVariantMap());
-    settings.setValue("lights", lights);
+    lifxLAN->saveScannedLight(light);
 }

@@ -9,6 +9,9 @@ LifxLAN::LifxLAN(QObject *parent)
     qRegisterMetaType<QList<quint8>>("QList<quint8>");
     QMetaType::registerConverter<QList<quint8>, QVariantList>(&convertToVariantList);
     QMetaType::registerConverter<QVariantList, QList<quint8>>(&convertFromVariantList);
+
+    QSettings settings;
+    qDebug() << "Settings path: "<< settings.fileName();
 }
 
 LifxLAN::~LifxLAN()
@@ -39,6 +42,86 @@ void LifxLAN::startScan()
     socket->writeDatagram(message, QHostAddress::Broadcast, 56700);
 }
 
+/*!
+ * \brief Saves a scanned light to saved lights
+ * \param light object to be saved. Must be scanned
+ * \return true if successful, false otherwise
+ */
+bool LifxLAN::saveScannedLight(Light *light)
+{
+    if (!scanned.contains(light->getAddress()))
+    {
+        qWarning() << "Attempt to add unscanned light";
+        return false;
+    }
+
+    if (saved.contains(light->getAddress()))
+    {
+        qWarning() << "Ignoring attempt to re-add saved light";
+        return false;
+    }
+
+    saved[light->getAddress()] = light;
+
+    saveSettings();
+    emit savedLightsUpdated(saved);
+
+    return true;
+}
+
+/*!
+ * \brief Removes a light from saved.
+ * \param light To be removed. Must be in saved hash.
+ * \return true if successful, false otherwise
+ */
+bool LifxLAN::removeSavedLight(Light *light)
+{
+    if (!saved.contains(light->getAddress()))
+    {
+        qWarning() << "Attempt to remove unsaved light";
+        return false;
+    }
+
+    saved.remove(light->getAddress());
+    saveSettings();
+    emit savedLightsUpdated(saved);
+
+    return true;
+}
+
+/*!
+ * \brief Load saved lights from QSettings.
+ */
+void LifxLAN::loadSettings()
+{
+    QSettings settings;
+    QVariantList lights = settings.value("lights").toList();
+
+    // Rebuild hash of IP->Lights. Maybe find a better way...
+    for (const auto& light : lights)
+    {
+        Light *l = new Light(light.toMap());
+        saved[l->getAddress()] = l;
+    }
+
+    emit savedLightsUpdated(saved);
+}
+
+/*!
+ * \brief Store updated saved lights to QSettings.
+ */
+void LifxLAN::saveSettings()
+{
+    QSettings settings;
+    QVariantList lights;
+    for (const auto& light : saved)
+    {
+        lights.append(light->toVariantMap());
+    }
+    settings.setValue("lights", lights);
+}
+
+
 /*
  * Private functions
  */
@@ -58,22 +141,29 @@ void LifxLAN::messageReceived()
         QHostAddress senderAddress = datagram.senderAddress();
         QByteArray data = datagram.data();
 
+        // Scanned light responded (usually with label)
         if (scanned.contains(senderAddress))
         {
             scanned[senderAddress]->processPacket(data);
+            return;
         }
 
-        else
+        // Saved light responded
+        if (saved.contains(senderAddress))
         {
-            if (LifxPacket::getMessageType(data) != 3) return;
-
-            QList<quint8> serial = LifxPacket::getSerial(data);
-
-            Light *light = new Light(senderAddress, serial, socket);
-            scanned[senderAddress] = light;
-
-            emit scanFoundLight(light);
+            saved[senderAddress]->processPacket(data);
+            return;
         }
+
+        // Light responded to me but is neither scanned nor saved
+        if (LifxPacket::getMessageType(data) != 3) return;
+
+        QList<quint8> serial = LifxPacket::getSerial(data);
+
+        Light *light = new Light(senderAddress, serial, socket);
+        scanned[senderAddress] = light;
+
+        emit scanFoundLight(light);
     }
 }
 

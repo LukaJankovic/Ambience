@@ -27,6 +27,8 @@ public:
 
     int getBrightness() const;
 
+    QHostAddress getAddress() const;
+
 private:
 
     // Basic info

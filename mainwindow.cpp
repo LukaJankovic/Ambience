@@ -9,11 +9,19 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    lifxLAN = new LifxLAN();
+
     ui->setupUi(this);
+
+    connect(lifxLAN,
+            &LifxLAN::savedLightsUpdated,
+            this,
+            &MainWindow::updateLightsList);
 
     lightsModel = new QStandardItemModel(this);
     ui->lightsList->setModel(lightsModel);
     ui->lightsList->setContextMenuPolicy(Qt::CustomContextMenu);
+
     connect(ui->lightsList,
             &QTreeWidget::customContextMenuRequested,
             this,
@@ -23,11 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
     lightsModel->setHorizontalHeaderLabels(headerLabels);
 
     setupMenuBar();
-
-    QSettings settings;
-    qInfo() << "Settings path: "<< settings.fileName();
-
-    showLightsList();
+    lifxLAN->loadSettings();
 }
 
 MainWindow::~MainWindow()
@@ -35,6 +39,8 @@ MainWindow::~MainWindow()
     delete scanAction;
     delete fileMenu;
     delete ui;
+
+    delete lifxLAN;
 }
 
 /*!
@@ -67,8 +73,6 @@ void MainWindow::showLightContextMenu(const QPoint &point)
 
 void MainWindow::scanDone(int r)
 {
-    lightsModel->clear();
-    showLightsList();
 }
 
 /*
@@ -91,24 +95,18 @@ void MainWindow::setupMenuBar()
 }
 
 /*!
- * \brief Shows lights from user settings.
+ * \brief Shows lights from LfixLAN saved.
  */
-void MainWindow::showLightsList()
+void MainWindow::updateLightsList(QHash<QHostAddress, Light *> lights)
 {
-    QSettings settings;
-    QVariantList lights = settings.value("lights").toList();
+    lightsModel->clear();
     for (const auto& light : lights)
     {
-        Light *l = new Light(light.toMap());
+        QStandardItem *label = new QStandardItem(light->getLabel());
 
-        QStandardItem *label = new QStandardItem(l->getLabel());
-        label->setData(QVariant::fromValue(l));
+        QStandardItem *brightness = new QStandardItem(QString::number(light->getBrightness()));
 
-        QStandardItem *brightness = new QStandardItem(QString::number(l->getBrightness()));
-        brightness->setData(QVariant::fromValue(l));
-
-        QStandardItem *power = new QStandardItem(QString::number(l->getPower()));
-        power->setData(QVariant::fromValue(l));
+        QStandardItem *power = new QStandardItem(QString::number(light->getPower()));
 
         lightsModel->appendRow({label, power, brightness});
     }
@@ -120,11 +118,7 @@ void MainWindow::showLightsList()
  */
 void MainWindow::removeLight(QModelIndex index)
 {
-    lightsModel->removeRow(index.row());
-    QSettings settings;
-    QVariantList lights = settings.value("lights").toList();
-    lights.removeAt(index.row());
-    settings.setValue("lights", lights);
+    // TOOD
 }
 
 /*!
@@ -132,7 +126,7 @@ void MainWindow::removeLight(QModelIndex index)
  */
 void MainWindow::openScanDialog()
 {
-    ScanWindow *scanWindow = new ScanWindow();
+    ScanWindow *scanWindow = new ScanWindow(lifxLAN);
 
     connect(scanWindow, &QDialog::finished, this, &MainWindow::scanDone);
 

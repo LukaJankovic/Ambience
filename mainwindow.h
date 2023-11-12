@@ -36,9 +36,11 @@ private:
     QMenu *fileMenu;
     QAction *scanAction;
 
+    LifxLAN *lifxLAN;
+
     void setupMenuBar();
 
-    void showLightsList();
+    void updateLightsList(QHash<QHostAddress, Light *> lights);
     void removeLight(QModelIndex index);
 
     void openScanDialog();
