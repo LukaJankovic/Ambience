@@ -10,7 +10,7 @@ Light::~Light()
 QVariantMap Light::toVariantMap() const
 {
     QVariantMap map;
-    map["label"] = label;
+    // map["label"] = label;
     map["address"] = address.toString();
 
     QString serialString;
@@ -37,7 +37,6 @@ Light::Light(const QHostAddress &address, const QList<quint8> &serial, QUdpSocke
 
 Light::Light(const QVariantMap &map)
 {
-    label = map["label"].toString();
     address = QHostAddress(map["address"].toString());
     for (const auto& ch : map["serial"].value<QList<quint8>>())
     {
@@ -55,9 +54,8 @@ void Light::processPacket(const QByteArray &packet)
 
     switch (LifxPacket::getMessageType(packet))
     {
-    case 25:
-        label = QString(LifxPacket::trimPayload(data));
-        emit labelUpdated(this, label);
+    case MsgStateLabel:
+        emit labelUpdated(this, QString(LifxPacket::trimPayload(data)));
         break;
     default:
         break;
@@ -67,21 +65,6 @@ void Light::processPacket(const QByteArray &packet)
 /*
  * Getters
  */
-
-QString Light::getLabel() const
-{
-    return label;
-}
-
-bool Light::getPower() const
-{
-    return power;
-}
-
-int Light::getBrightness() const
-{
-    return brightness;
-}
 
 QHostAddress Light::getAddress() const
 {

@@ -33,13 +33,7 @@ void LifxLAN::startScan()
     scanned.clear();
 
     QObject::connect(socket, &QUdpSocket::readyRead, this, &LifxLAN::messageReceived);
-
-    QByteArray message = LifxPacket::getFrameHeader(true);
-    message.append(LifxPacket::getFrameAddress());
-    message.append(LifxPacket::getProtocolHeader(2));
-    LifxPacket::fixHeaderSize(message);
-
-    socket->writeDatagram(message, QHostAddress::Broadcast, 56700);
+    socket->writeDatagram(LifxPacket::getService(), QHostAddress::Broadcast, 56700);
 }
 
 /*!
@@ -121,6 +115,15 @@ void LifxLAN::saveSettings()
     settings.setValue("lights", lights);
 }
 
+/*!
+ * \brief Sends a packet to a light
+ * \param Taret light object to receive the message
+ * \param Packet to be sent
+ */
+void LifxLAN::sendPacket(Light *target, QByteArray packet)
+{
+    socket->writeDatagram(packet, target->getAddress(), 56700);
+}
 
 /*
  * Private functions
@@ -158,11 +161,13 @@ void LifxLAN::messageReceived()
         }
 
         // Light responded to me but is neither scanned nor saved
-        if (LifxPacket::getMessageType(data) != 3) return;
+        if (LifxPacket::getMessageType(data) != MsgStateService)
+            return;
 
-        QList<quint8> serial = LifxPacket::getSerial(data);
+        Light *light = new Light(senderAddress,
+                                 LifxPacket::getSerial(data),
+                                 socket);
 
-        Light *light = new Light(senderAddress, serial, socket);
         scanned[senderAddress] = light;
 
         emit scanFoundLight(light);

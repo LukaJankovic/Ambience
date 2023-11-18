@@ -20,27 +20,16 @@ public:
 
     void processPacket(const QByteArray &packet);
 
-    QString getLabel() const;
-
-
-    bool getPower() const;
-
-    int getBrightness() const;
-
     QHostAddress getAddress() const;
 
 private:
 
     // Basic info
-    QString label;
+    // QString label;
     QHostAddress address;
     QList<quint8> serial;
 
     QUdpSocket *socket;
-
-    // Light status
-    bool power = true;
-    int brightness = 56;
 
 signals:
     void labelUpdated(Light *light, QString label);

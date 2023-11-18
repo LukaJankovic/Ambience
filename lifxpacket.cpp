@@ -159,3 +159,21 @@ QByteArray LifxPacket::trimPayload(const QByteArray &payload)
     if (nullIndex == -1) return payload;
     return payload.left(nullIndex);
 }
+
+/*
+ * Lifx LAN Packet payloads
+ */
+
+/*!
+ * \brief Generates a complete getService packet to be sent.
+ * \return Byte array containing full packet.
+ */
+QByteArray LifxPacket::getService()
+{
+    QByteArray message = LifxPacket::getFrameHeader(true);
+    message.append(LifxPacket::getFrameAddress());
+    message.append(LifxPacket::getProtocolHeader(MsgGetService));
+    LifxPacket::fixHeaderSize(message);
+
+    return message;
+}

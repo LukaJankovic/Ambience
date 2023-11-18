@@ -102,13 +102,12 @@ void MainWindow::updateLightsList(QList<Light *> lights)
     lightsModel->clear();
     for (const auto& light : lights)
     {
-        QStandardItem *label = new QStandardItem(light->getLabel());
+        connect(light,
+                &Light::labelUpdated,
+                this,
+                &MainWindow::labelUpdated);
 
-        QStandardItem *brightness = new QStandardItem(QString::number(light->getBrightness()));
-
-        QStandardItem *power = new QStandardItem(QString::number(light->getPower()));
-
-        lightsModel->appendRow({label, power, brightness});
+        // lightsModel->appendRow({label, power, brightness});
     }
 }
 

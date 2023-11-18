@@ -12,6 +12,7 @@ SOURCES += \
     lifxlan.cpp \
     lifxpacket.cpp \
     light.cpp \
+    lightmodel.cpp \
     main.cpp \
     mainwindow.cpp \
     scanwindow.cpp
@@ -20,6 +21,7 @@ HEADERS += \
     lifxlan.h \
     lifxpacket.h \
     light.h \
+    lightmodel.h \
     mainwindow.h \
     scanwindow.h
 

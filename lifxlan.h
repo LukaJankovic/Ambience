@@ -11,6 +11,8 @@
 class LifxLAN : public QObject
 {
     Q_OBJECT
+
+    friend class LightModel;
 public:
     explicit LifxLAN(QObject *parent = nullptr);
     ~LifxLAN();
@@ -20,8 +22,13 @@ public:
     bool saveScannedLight(Light *light);
     bool removeSavedLight(int index);
 
+    void sendPacket(Light *target, QByteArray packet);
+
     void loadSettings();
     void saveSettings();
+
+    // Saved list access functions
+
 private:
     QUdpSocket *socket;
     QHash<QHostAddress, Light*> scanned;

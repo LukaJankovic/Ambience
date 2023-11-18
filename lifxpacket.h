@@ -3,6 +3,19 @@
 
 #include <QObject>
 
+enum LifxMessageType
+{
+    // General
+    MsgGetService = 2,
+
+    // Get (send to light)
+    MsgGetLabel = 23,
+
+    // State (response)
+    MsgStateService = 3,
+    MsgStateLabel = 25
+};
+
 class LifxPacket : public QObject
 {
     Q_OBJECT
@@ -19,6 +32,8 @@ public:
     static QByteArray getPayload(const QByteArray &packet);
 
     static QByteArray trimPayload(const QByteArray &payload);
+
+    static QByteArray getService();
 };
 
 #endif // LIFXPACKET_H

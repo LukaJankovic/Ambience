@@ -27,6 +27,7 @@ public:
 
 public slots:
     void scanDone(int r);
+    void labelUpdated(Light *light);
 
 private:
     Ui::MainWindow *ui;
