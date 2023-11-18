@@ -55,13 +55,13 @@ bool LifxLAN::saveScannedLight(Light *light)
         return false;
     }
 
-    if (saved.contains(light->getAddress()))
+    if (saved.contains(light))
     {
         qWarning() << "Ignoring attempt to re-add saved light";
         return false;
     }
 
-    saved[light->getAddress()] = light;
+    saved.append(light);
 
     saveSettings();
     emit savedLightsUpdated(saved);
@@ -74,15 +74,15 @@ bool LifxLAN::saveScannedLight(Light *light)
  * \param light To be removed. Must be in saved hash.
  * \return true if successful, false otherwise
  */
-bool LifxLAN::removeSavedLight(Light *light)
+bool LifxLAN::removeSavedLight(int index)
 {
-    if (!saved.contains(light->getAddress()))
+    if (index < 0 || index > saved.size())
     {
         qWarning() << "Attempt to remove unsaved light";
         return false;
     }
 
-    saved.remove(light->getAddress());
+    saved.removeAt(index);
     saveSettings();
     emit savedLightsUpdated(saved);
 
@@ -101,7 +101,7 @@ void LifxLAN::loadSettings()
     for (const auto& light : lights)
     {
         Light *l = new Light(light.toMap());
-        saved[l->getAddress()] = l;
+        saved.append(l);
     }
 
     emit savedLightsUpdated(saved);
@@ -149,10 +149,12 @@ void LifxLAN::messageReceived()
         }
 
         // Saved light responded
-        if (saved.contains(senderAddress))
+        for (const auto& light : saved)
         {
-            saved[senderAddress]->processPacket(data);
-            return;
+            if (light->getAddress() == senderAddress)
+            {
+                light->processPacket(data);
+            }
         }
 
         // Light responded to me but is neither scanned nor saved

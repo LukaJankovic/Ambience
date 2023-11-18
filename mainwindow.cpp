@@ -97,7 +97,7 @@ void MainWindow::setupMenuBar()
 /*!
  * \brief Shows lights from LfixLAN saved.
  */
-void MainWindow::updateLightsList(QHash<QHostAddress, Light *> lights)
+void MainWindow::updateLightsList(QList<Light *> lights)
 {
     lightsModel->clear();
     for (const auto& light : lights)
@@ -118,7 +118,7 @@ void MainWindow::updateLightsList(QHash<QHostAddress, Light *> lights)
  */
 void MainWindow::removeLight(QModelIndex index)
 {
-    // TOOD
+    lifxLAN->removeSavedLight(index.row());
 }
 
 /*!

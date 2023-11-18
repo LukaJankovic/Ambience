@@ -18,18 +18,18 @@ public:
     void startScan();
 
     bool saveScannedLight(Light *light);
-    bool removeSavedLight(Light *light);
+    bool removeSavedLight(int index);
 
     void loadSettings();
     void saveSettings();
 private:
     QUdpSocket *socket;
     QHash<QHostAddress, Light*> scanned;
-    QHash<QHostAddress, Light*> saved;
+    QList<Light *> saved;
 
 signals:
     void scanFoundLight(Light *light);
-    void savedLightsUpdated(QHash<QHostAddress, Light*> saved);
+    void savedLightsUpdated(QList<Light *> saved);
 
 private slots:
     void messageReceived();

@@ -40,7 +40,7 @@ private:
 
     void setupMenuBar();
 
-    void updateLightsList(QHash<QHostAddress, Light *> lights);
+    void updateLightsList(QList<Light *> lights);
     void removeLight(QModelIndex index);
 
     void openScanDialog();
