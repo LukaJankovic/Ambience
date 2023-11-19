@@ -34,6 +34,7 @@ public:
     static QByteArray trimPayload(const QByteArray &payload);
 
     static QByteArray getService();
+    static QByteArray getLabel(const QList<quint8> &target);
 };
 
 #endif // LIFXPACKET_H

@@ -8,6 +8,7 @@
 
 #include "light.h"
 #include "lifxlan.h"
+#include "lightmodel.h"
 
 #include "scanwindow.h"
 
@@ -32,7 +33,8 @@ public slots:
 private:
     Ui::MainWindow *ui;
 
-    QStandardItemModel *lightsModel;
+    //QStandardItemModel *lightsModel;
+    LightModel *lightsModel;
 
     QMenu *fileMenu;
     QAction *scanAction;

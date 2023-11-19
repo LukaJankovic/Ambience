@@ -12,7 +12,7 @@ class Light : public QObject
 
 public:
     explicit Light(QObject *parent = nullptr);
-    Light(const QHostAddress &address, const QList<quint8> &serial, QUdpSocket *socket);
+    Light(const QHostAddress &address, const QList<quint8> &serial);
     Light(const QVariantMap &map);
     ~Light();
 
@@ -21,15 +21,17 @@ public:
     void processPacket(const QByteArray &packet);
 
     QHostAddress getAddress() const;
+    QString getLabel() const;
+
+    QList<quint8> getSerial() const;
 
 private:
 
     // Basic info
-    // QString label;
     QHostAddress address;
     QList<quint8> serial;
 
-    QUdpSocket *socket;
+    QString label;
 
 signals:
     void labelUpdated(Light *light, QString label);

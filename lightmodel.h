@@ -1,32 +1,30 @@
 #ifndef LIGHTMODEL_H
 #define LIGHTMODEL_H
 
-#include <QAbstractItemModel>
+#include <QAbstractListModel>
 
 #include "lifxlan.h"
+#include "light.h"
 
-class LightModel : public QAbstractItemModel
+class LightModel : public QAbstractListModel
 {
     Q_OBJECT
 
 public:
-    explicit LightModel(QObject *parent = nullptr);
+    explicit LightModel(LifxLAN *lifxLAN, QObject *parent = nullptr);
 
     // Basic functionality:
-    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
-    QModelIndex parent(const QModelIndex &index) const override;
-
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
 public slots:
-    void lightsUpdated(QList<Light *> lights);
+    void lightUpdated(Light *light);
+    void lightListUpdated(QList<Light *> lights);
 
 private:
     LifxLAN *lifxLAN;
-
+    QList<Light *> lights;
 };
 
 #endif // LIGHTMODEL_H

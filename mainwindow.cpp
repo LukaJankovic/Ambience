@@ -13,12 +13,15 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->setupUi(this);
 
+    /*
     connect(lifxLAN,
             &LifxLAN::savedLightsUpdated,
             this,
             &MainWindow::updateLightsList);
+*/
 
-    lightsModel = new QStandardItemModel(this);
+    //lightsModel = new QStandardItemModel(this);
+    lightsModel = new LightModel(lifxLAN, this);
     ui->lightsList->setModel(lightsModel);
     ui->lightsList->setContextMenuPolicy(Qt::CustomContextMenu);
 
@@ -27,8 +30,8 @@ MainWindow::MainWindow(QWidget *parent)
             this,
             &MainWindow::showLightContextMenu);
 
-    lightsModel->setColumnCount(headerLabels.count());
-    lightsModel->setHorizontalHeaderLabels(headerLabels);
+    //lightsModel->setColumnCount(headerLabels.count());
+    //lightsModel->setHorizontalHeaderLabels(headerLabels);
 
     setupMenuBar();
     lifxLAN->loadSettings();
@@ -75,6 +78,10 @@ void MainWindow::scanDone(int r)
 {
 }
 
+void MainWindow::labelUpdated(Light *light)
+{
+}
+
 /*
  * Private functions
  */
@@ -97,8 +104,10 @@ void MainWindow::setupMenuBar()
 /*!
  * \brief Shows lights from LfixLAN saved.
  */
+
 void MainWindow::updateLightsList(QList<Light *> lights)
 {
+    /*
     lightsModel->clear();
     for (const auto& light : lights)
     {
@@ -109,6 +118,7 @@ void MainWindow::updateLightsList(QList<Light *> lights)
 
         // lightsModel->appendRow({label, power, brightness});
     }
+    */
 }
 
 /*!

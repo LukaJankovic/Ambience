@@ -3,6 +3,10 @@
 Light::Light(QObject *parent)
     : QObject{parent} {}
 
+Light::Light(const QHostAddress &address, const QList<quint8> &serial) : address(address),
+    serial(serial)
+{}
+
 Light::~Light()
 {
 }
@@ -10,7 +14,6 @@ Light::~Light()
 QVariantMap Light::toVariantMap() const
 {
     QVariantMap map;
-    // map["label"] = label;
     map["address"] = address.toString();
 
     QString serialString;
@@ -21,27 +24,20 @@ QVariantMap Light::toVariantMap() const
     }
 
     map["serial"] = serialString;
+    map["label"] = label;
+
     return map;
-}
-
-Light::Light(const QHostAddress &address, const QList<quint8> &serial, QUdpSocket *socket) : address(address),
-    serial(serial) , socket(socket)
-{
-    QByteArray message = LifxPacket::getFrameHeader(false);
-    message.append(LifxPacket::getFrameAddress(serial));
-    message.append(LifxPacket::getProtocolHeader(23));
-    LifxPacket::fixHeaderSize(message);
-
-    socket->writeDatagram(message, address, 56700);
 }
 
 Light::Light(const QVariantMap &map)
 {
     address = QHostAddress(map["address"].toString());
-    for (const auto& ch : map["serial"].value<QList<quint8>>())
+    for (const auto& ch : map["serial"].toString())
     {
-        serial.append(ch);
+        serial.append(ch.unicode());
     }
+
+    label = map["label"].toString();
 }
 
 /*!
@@ -55,7 +51,8 @@ void Light::processPacket(const QByteArray &packet)
     switch (LifxPacket::getMessageType(packet))
     {
     case MsgStateLabel:
-        emit labelUpdated(this, QString(LifxPacket::trimPayload(data)));
+        label = QString(LifxPacket::trimPayload(data));
+        emit labelUpdated(this, label);
         break;
     default:
         break;
@@ -69,4 +66,14 @@ void Light::processPacket(const QByteArray &packet)
 QHostAddress Light::getAddress() const
 {
     return address;
+}
+
+QList<quint8> Light::getSerial() const
+{
+    return serial;
+}
+
+QString Light::getLabel() const
+{
+    return label;
 }

@@ -1,38 +1,30 @@
 #include "lightmodel.h"
 
-LightModel::LightModel(QObject *parent)
-    : QAbstractItemModel(parent)
+LightModel::LightModel(LifxLAN *lifxLAN, QObject *parent)
+    : QAbstractListModel(parent)
+    , lifxLAN(lifxLAN)
 {
+
     connect(lifxLAN,
             &LifxLAN::savedLightsUpdated,
             this,
-            &LightModel::lightsUpdated);
-}
+            &LightModel::lightListUpdated);
 
-QModelIndex LightModel::index(int row, int column, const QModelIndex &parent) const
-{
-    // FIXME: Implement me!
-}
-
-QModelIndex LightModel::parent(const QModelIndex &index) const
-{
-    // FIXME: Implement me!
+    connect(lifxLAN,
+            &LifxLAN::lightUpdated,
+            this,
+            &LightModel::lightUpdated);
 }
 
 int LightModel::rowCount(const QModelIndex &parent) const
 {
-    if (!parent.isValid())
+    // For list models only the root node (an invalid parent) should return the list's size. For all
+    // other (valid) parents, rowCount() should return 0 so that it does not become a tree model.
+    if (parent.isValid())
         return 0;
 
-    return lifxLAN->saved.length();
-}
-
-int LightModel::columnCount(const QModelIndex &parent) const
-{
-    if (!parent.isValid())
-        return 0;
-
-    return 3;
+    // FIXME: Implement me!
+    return lights.length();
 }
 
 QVariant LightModel::data(const QModelIndex &index, int role) const
@@ -40,13 +32,38 @@ QVariant LightModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    if (role == Qt::DisplayRole)
+    return lights.at(index.row())->getLabel();
+}
+
+/*
+ * Public slots
+ */
+
+void LightModel::lightListUpdated(QList<Light *> lights)
+{
+    for (const auto &light : lifxLAN->saved)
     {
-        return QVariant();
+        lifxLAN->sendPacket(light, LifxPacket::getLabel(light->getSerial()));
+
+        int row = lights.length();
+
+        beginInsertRows(QModelIndex(), row, row);
+        lights.append(light);
+        endInsertRows();
+
+        emit dataChanged(createIndex(0, 0), createIndex(rowCount(), 0));
     }
 }
 
-void LightModel::lightsUpdated(QList<Light *> lights)
+void LightModel::lightUpdated(Light *light)
 {
-    emit dataChanged(createIndex(0,0), createIndex(rowCount(), columnCount()));
+    for (int i = 0; i < lifxLAN->saved.length(); i++)
+    {
+        if (lifxLAN->saved[i] == light) {
+            lights[i] = light;
+            QModelIndex index = createIndex(i, 0);
+            emit dataChanged(index, index);
+            return;
+        }
+    }
 }

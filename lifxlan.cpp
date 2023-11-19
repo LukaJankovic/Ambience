@@ -12,6 +12,8 @@ LifxLAN::LifxLAN(QObject *parent)
 
     QSettings settings;
     qDebug() << "Settings path: "<< settings.fileName();
+
+    QObject::connect(socket, &QUdpSocket::readyRead, this, &LifxLAN::messageReceived);
 }
 
 LifxLAN::~LifxLAN()
@@ -32,7 +34,6 @@ void LifxLAN::startScan()
     qDeleteAll(scanned.begin(), scanned.end());
     scanned.clear();
 
-    QObject::connect(socket, &QUdpSocket::readyRead, this, &LifxLAN::messageReceived);
     socket->writeDatagram(LifxPacket::getService(), QHostAddress::Broadcast, 56700);
 }
 
@@ -157,6 +158,8 @@ void LifxLAN::messageReceived()
             if (light->getAddress() == senderAddress)
             {
                 light->processPacket(data);
+                emit lightUpdated(light);
+                return;
             }
         }
 
@@ -165,12 +168,15 @@ void LifxLAN::messageReceived()
             return;
 
         Light *light = new Light(senderAddress,
-                                 LifxPacket::getSerial(data),
-                                 socket);
+                                 LifxPacket::getSerial(data));
 
         scanned[senderAddress] = light;
 
         emit scanFoundLight(light);
+
+        socket->writeDatagram(LifxPacket::getLabel(light->getSerial()),
+                              light->getAddress(),
+                              56700);
     }
 }
 

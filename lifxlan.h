@@ -37,6 +37,7 @@ private:
 signals:
     void scanFoundLight(Light *light);
     void savedLightsUpdated(QList<Light *> saved);
+    void lightUpdated(Light *light);
 
 private slots:
     void messageReceived();

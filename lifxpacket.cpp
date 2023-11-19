@@ -38,6 +38,8 @@ QByteArray LifxPacket::getFrameHeader(bool tagged)
  */
 QByteArray LifxPacket::getFrameAddress(const QList<quint8> &target)
 {
+    if (target.length() != 6)
+        throw std::invalid_argument("target length must be 6");
 
     QByteArray address;
 
@@ -173,6 +175,22 @@ QByteArray LifxPacket::getService()
     QByteArray message = LifxPacket::getFrameHeader(true);
     message.append(LifxPacket::getFrameAddress());
     message.append(LifxPacket::getProtocolHeader(MsgGetService));
+    LifxPacket::fixHeaderSize(message);
+
+    return message;
+}
+
+/*!
+ * \brief Generates a complete getLabel packet to be sent.
+ * \param Serial of the receiving light.
+ * \return Byte array containing full packet.
+ */
+QByteArray LifxPacket::getLabel(const QList<quint8> &target)
+{
+
+    QByteArray message = LifxPacket::getFrameHeader(false);
+    message.append(LifxPacket::getFrameAddress(target));
+    message.append(LifxPacket::getProtocolHeader(MsgGetLabel));
     LifxPacket::fixHeaderSize(message);
 
     return message;
