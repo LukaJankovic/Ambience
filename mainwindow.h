@@ -26,14 +26,9 @@ public:
 
     void showLightContextMenu(const QPoint &pos);
 
-public slots:
-    void scanDone(int r);
-    void labelUpdated(Light *light);
-
 private:
     Ui::MainWindow *ui;
 
-    //QStandardItemModel *lightsModel;
     LightModel *lightsModel;
 
     QMenu *fileMenu;
@@ -43,7 +38,6 @@ private:
 
     void setupMenuBar();
 
-    void updateLightsList(QList<Light *> lights);
     void removeLight(QModelIndex index);
 
     void openScanDialog();

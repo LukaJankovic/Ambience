@@ -32,7 +32,9 @@ QVariant LightModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    return lights.at(index.row())->getLabel();
+    if (role == Qt::DisplayRole)
+        return QVariant::fromValue(lights.at(index.row())->getLabel());
+    return QVariant();
 }
 
 /*
@@ -41,6 +43,10 @@ QVariant LightModel::data(const QModelIndex &index, int role) const
 
 void LightModel::lightListUpdated(QList<Light *> lights)
 {
+    beginRemoveRows(QModelIndex(), 0, this->lights.length() - 1);
+    lights.clear();
+    endResetModel();
+
     for (const auto &light : lifxLAN->saved)
     {
         lifxLAN->sendPacket(light, LifxPacket::getLabel(light->getSerial()));
@@ -48,10 +54,8 @@ void LightModel::lightListUpdated(QList<Light *> lights)
         int row = lights.length();
 
         beginInsertRows(QModelIndex(), row, row);
-        lights.append(light);
+        this->lights.append(light);
         endInsertRows();
-
-        emit dataChanged(createIndex(0, 0), createIndex(rowCount(), 0));
     }
 }
 
