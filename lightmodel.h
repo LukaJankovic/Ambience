@@ -18,6 +18,8 @@ public:
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
+    Light *lightAtIndex(QModelIndex &index);
+
 public slots:
     void lightUpdated(Light *light);
     void lightListUpdated(QList<Light *> lights);

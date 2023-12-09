@@ -31,11 +31,12 @@ public:
 
 private:
     QUdpSocket *socket;
-    QHash<QHostAddress, Light*> scanned;
+    QList<Light *> scanned;
     QList<Light *> saved;
 
 signals:
-    void scanFoundLight(Light *light);
+    void scannedUpdated(QList<Light *>scanned);
+
     void savedLightsUpdated(QList<Light *> saved);
     void lightUpdated(Light *light);
 

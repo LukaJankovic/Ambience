@@ -19,10 +19,18 @@ ScanWindow::ScanWindow(LifxLAN *lifxLAN, QWidget *parent) :
 {
     ui->setupUi(this);
 
-    QObject::connect(lifxLAN, &LifxLAN::scanFoundLight, this, &ScanWindow::scanFoundLight);
-
-    scanModel = new QStandardItemModel(this);
+    scanModel = new LightModel(lifxLAN, this);
     ui->scanListView->setModel(scanModel);
+
+    connect(lifxLAN,
+            &LifxLAN::scannedUpdated,
+            scanModel,
+            &LightModel::lightListUpdated);
+
+    connect(lifxLAN,
+            &LifxLAN::lightUpdated,
+            scanModel,
+            &LightModel::lightUpdated);
 
     scanButton = new QPushButton("Rescan", this);
     ui->buttonBox->addButton(scanButton, QDialogButtonBox::ActionRole);
@@ -56,31 +64,6 @@ void ScanWindow::startScan()
  */
 
 /*!
- * \brief Called when light found to attach label update function.
- * \param light object representing physical LIFX light.
- */
-void ScanWindow::scanFoundLight(Light *light)
-{
-    QObject::connect(light, &Light::labelUpdated, this, &ScanWindow::scanLightLabelUpdated);
-}
-
-/*!
- * \brief Called when label for light is received.
- *
- * Creates a row for the light and adds it to the list model.
- *
- * \param light object representing physical LIFX light.
- * \param label string containing received light label.
- */
-void ScanWindow::scanLightLabelUpdated(Light *light, QString label)
-{
-    QStandardItem *row = new QStandardItem(label);
-    row->setData(QVariant::fromValue(light), ObjectRole);
-
-    scanModel->appendRow(row);
-}
-
-/*!
  * \brief Called when user presses accept.
  *
  * Adds selected light to settings.
@@ -88,7 +71,7 @@ void ScanWindow::scanLightLabelUpdated(Light *light, QString label)
 void ScanWindow::accept()
 {
     QModelIndex currentIndex = ui->scanListView->currentIndex();
-    Light *light = currentIndex.data(ObjectRole).value<Light *>();
+    Light *light = scanModel->lightAtIndex(currentIndex);
 
     lifxLAN->saveScannedLight(light);
 }

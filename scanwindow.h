@@ -6,6 +6,7 @@
 #include <QPushButton>
 
 #include "lifxlan.h"
+#include "lightmodel.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class ScanWindow; }
@@ -24,16 +25,12 @@ private:
     Ui::ScanWindow *ui;
 
     QPushButton *scanButton;
-    QStandardItemModel *scanModel;
+    LightModel *scanModel;
 
     LifxLAN *lifxLAN;
 
-
 private slots:
     void startScan();
-    void scanFoundLight(Light *light);
-    void scanLightLabelUpdated(Light *light, QString label);
-
     void accept();
 };
 

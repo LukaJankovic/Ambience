@@ -44,7 +44,7 @@ void LifxLAN::startScan()
  */
 bool LifxLAN::saveScannedLight(Light *light)
 {
-    if (!scanned.contains(light->getAddress()))
+    if (!scanned.contains(light))
     {
         qWarning() << "Attempt to add unscanned light";
         return false;
@@ -56,10 +56,12 @@ bool LifxLAN::saveScannedLight(Light *light)
         return false;
     }
 
+    scanned.removeAll(light);
     saved.append(light);
 
     saveSettings();
     emit savedLightsUpdated(saved);
+    emit scannedUpdated(scanned);
 
     return true;
 }
@@ -146,10 +148,14 @@ void LifxLAN::messageReceived()
         QByteArray data = datagram.data();
 
         // Scanned light responded (usually with label)
-        if (scanned.contains(senderAddress))
+        for (const auto& light : scanned)
         {
-            scanned[senderAddress]->processPacket(data);
-            return;
+            if (light->getAddress() == senderAddress)
+            {
+                light->processPacket(data);
+                emit lightUpdated(light);
+                return;
+            }
         }
 
         // Saved light responded
@@ -170,9 +176,9 @@ void LifxLAN::messageReceived()
         Light *light = new Light(senderAddress,
                                  LifxPacket::getSerial(data));
 
-        scanned[senderAddress] = light;
+        scanned.append(light);
 
-        emit scanFoundLight(light);
+        emit scannedUpdated(scanned);
 
         socket->writeDatagram(LifxPacket::getLabel(light->getSerial()),
                               light->getAddress(),

@@ -17,6 +17,16 @@ MainWindow::MainWindow(QWidget *parent)
     ui->lightsList->setModel(lightsModel);
     ui->lightsList->setContextMenuPolicy(Qt::CustomContextMenu);
 
+    connect(lifxLAN,
+            &LifxLAN::savedLightsUpdated,
+            lightsModel,
+            &LightModel::lightListUpdated);
+
+    connect(lifxLAN,
+            &LifxLAN::lightUpdated,
+            lightsModel,
+            &LightModel::lightUpdated);
+
     connect(ui->lightsList,
             &QTreeWidget::customContextMenuRequested,
             this,
