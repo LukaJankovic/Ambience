@@ -27,10 +27,20 @@ MainWindow::MainWindow(QWidget *parent)
             lightsModel,
             &LightModel::lightUpdated);
 
+    connect(lifxLAN,
+            &LifxLAN::lightUpdated,
+            this,
+            &MainWindow::lightUpdated);
+
     connect(ui->lightsList,
-            &QTreeWidget::customContextMenuRequested,
+            &QListView::customContextMenuRequested,
             this,
             &MainWindow::showLightContextMenu);
+
+    connect(ui->lightsList->selectionModel(),
+            &QItemSelectionModel::selectionChanged,
+            this,
+            &MainWindow::lightSelectionChanged);
 
     setupMenuBar();
     lifxLAN->loadSettings();
@@ -67,6 +77,34 @@ void MainWindow::showLightContextMenu(const QPoint &point)
             removeLight(index);
         }
     }
+}
+
+/*
+ * Public slots
+ */
+
+/*!
+ * \brief Called when the selection in the lights list changes.
+ *        Loads light info and triggers ui updates.
+ */
+void MainWindow::lightSelectionChanged()
+{
+    QModelIndex selection = ui->lightsList->selectionModel()->selection().indexes()[0];
+    currentLight = selection.data(Qt::UserRole).value<Light *>();
+
+    lifxLAN->sendPacket(currentLight, LifxPacket::getPower(currentLight->getSerial()));
+}
+
+/*!
+ * \brief Called when a light sends update. If it's the currently selected light,
+ *        Updates the appropriate UI.
+ */
+void MainWindow::lightUpdated(Light *light)
+{
+    if (light != currentLight)
+        return;
+
+    ui->power->setChecked(light->getPower() != 0);
 }
 
 /*

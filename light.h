@@ -21,9 +21,9 @@ public:
     void processPacket(const QByteArray &packet);
 
     QHostAddress getAddress() const;
-    QString getLabel() const;
-
     QList<quint8> getSerial() const;
+    QString getLabel() const;
+    quint16 getPower() const;
 
 private:
 
@@ -32,9 +32,7 @@ private:
     QList<quint8> serial;
 
     QString label;
-
-signals:
-    void labelUpdated(Light *light, QString label);
+    quint16 power;
 };
 
 #endif // LIGHT_H

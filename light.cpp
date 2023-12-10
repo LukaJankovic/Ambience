@@ -52,7 +52,9 @@ void Light::processPacket(const QByteArray &packet)
     {
     case MsgStateLabel:
         label = QString(LifxPacket::trimPayload(data));
-        emit labelUpdated(this, label);
+        break;
+    case MsgStatePower:
+        power = (data[1] << 8) + data[0];
         break;
     default:
         break;
@@ -71,6 +73,11 @@ QHostAddress Light::getAddress() const
 QList<quint8> Light::getSerial() const
 {
     return serial;
+}
+
+quint16 Light::getPower() const
+{
+    return power;
 }
 
 QString Light::getLabel() const

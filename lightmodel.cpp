@@ -32,6 +32,8 @@ QVariant LightModel::data(const QModelIndex &index, int role) const
 
     if (role == Qt::DisplayRole)
         return QVariant::fromValue(lights.at(index.row())->getLabel());
+    if (role == Qt::UserRole)
+        return QVariant::fromValue(lights.at(index.row()));
     return QVariant();
 }
 

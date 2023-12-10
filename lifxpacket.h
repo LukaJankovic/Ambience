@@ -9,10 +9,12 @@ enum LifxMessageType
     MsgGetService = 2,
 
     // Get (send to light)
+    MsgGetPower = 20,
     MsgGetLabel = 23,
 
     // State (response)
     MsgStateService = 3,
+    MsgStatePower = 22,
     MsgStateLabel = 25
 };
 
@@ -33,8 +35,11 @@ public:
 
     static QByteArray trimPayload(const QByteArray &payload);
 
+    static QByteArray emptyRequest(const QList<quint8> &target, unsigned messageID);
+
     static QByteArray getService();
     static QByteArray getLabel(const QList<quint8> &target);
+    static QByteArray getPower(const QList<quint8> &target);
 };
 
 #endif // LIFXPACKET_H

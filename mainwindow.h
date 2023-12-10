@@ -26,6 +26,10 @@ public:
 
     void showLightContextMenu(const QPoint &pos);
 
+public slots:
+    void lightSelectionChanged();
+    void lightUpdated(Light *light);
+
 private:
     Ui::MainWindow *ui;
 
@@ -35,6 +39,7 @@ private:
     QAction *scanAction;
 
     LifxLAN *lifxLAN;
+    Light *currentLight;
 
     void setupMenuBar();
 
