@@ -12,6 +12,9 @@ enum LifxMessageType
     MsgGetPower = 20,
     MsgGetLabel = 23,
 
+    // Set (update light)
+    MsgSetPower = 21,
+
     // State (response)
     MsgStateService = 3,
     MsgStatePower = 22,
@@ -40,6 +43,8 @@ public:
     static QByteArray getService();
     static QByteArray getLabel(const QList<quint8> &target);
     static QByteArray getPower(const QList<quint8> &target);
+
+    static QByteArray setPower(const QList<quint8> &target, quint16 level);
 };
 
 #endif // LIFXPACKET_H

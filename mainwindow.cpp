@@ -42,6 +42,11 @@ MainWindow::MainWindow(QWidget *parent)
             this,
             &MainWindow::lightSelectionChanged);
 
+    connect(ui->power,
+            &QCheckBox::clicked,
+            this,
+            &MainWindow::powerStateChanged);
+
     setupMenuBar();
     lifxLAN->loadSettings();
 }
@@ -105,6 +110,19 @@ void MainWindow::lightUpdated(Light *light)
         return;
 
     ui->power->setChecked(light->getPower() != 0);
+}
+
+/*!
+ * \brief Called when the power switch was toggled.
+ *        Sends to current light to update power.
+ * \param State of the power switch.
+ */
+void MainWindow::powerStateChanged(bool clicked)
+{
+    if (!currentLight)
+        return;
+
+    lifxLAN->sendPacket(currentLight, LifxPacket::setPower(currentLight->getSerial(), clicked * 32768));
 }
 
 /*

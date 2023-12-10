@@ -30,6 +30,8 @@ public slots:
     void lightSelectionChanged();
     void lightUpdated(Light *light);
 
+    void powerStateChanged(bool clicked);
+
 private:
     Ui::MainWindow *ui;
 

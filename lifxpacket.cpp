@@ -215,3 +215,23 @@ QByteArray LifxPacket::getPower(const QList<quint8> &target)
 {
     return LifxPacket::emptyRequest(target, MsgGetPower);
 }
+
+/*!
+ * \brief Generates a complete setPower packet to be sent
+ * \param Serial of the receiving light.
+ * \param Requested power level.
+ * \return Byte array containing full packet.
+ */
+QByteArray LifxPacket::setPower(const QList<quint8> &target, quint16 level)
+{
+    QByteArray message = LifxPacket::getFrameHeader(false);
+    message.append(LifxPacket::getFrameAddress(target));
+    message.append(LifxPacket::getProtocolHeader(MsgSetPower));
+
+    message.append(level & 0xff);
+    message.append(level >> 8);
+
+    LifxPacket::fixHeaderSize(message);
+
+    return message;
+}
