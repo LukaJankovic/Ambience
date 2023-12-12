@@ -1,7 +1,7 @@
 #include "lifxlan.h"
 
 LifxLAN::LifxLAN(QObject *parent)
-    : QObject{parent}
+        : QObject{parent}
 {
     socket = new QUdpSocket(this);
     socket->bind(56700);

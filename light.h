@@ -2,13 +2,13 @@
 #define LIGHT_H
 
 #include <QObject>
-#include <QtNetwork>
+#include <QtNetwork/QtNetwork>
 
 #include "lifxpacket.h"
 
 class Light : public QObject
 {
-    Q_OBJECT
+Q_OBJECT
 
 public:
     explicit Light(QObject *parent = nullptr);

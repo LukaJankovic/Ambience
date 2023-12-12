@@ -14,7 +14,7 @@ QT_END_NAMESPACE
 
 class ScanWindow : public QDialog
 {
-    Q_OBJECT
+Q_OBJECT
 
 public:
     explicit ScanWindow(QWidget *parent = nullptr);

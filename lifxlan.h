@@ -2,7 +2,7 @@
 #define LIFXLAN_H
 
 #include <QObject>
-#include <QtNetwork>
+#include <QtNetwork/QtNetwork>
 #include <QtAlgorithms>
 
 #include "lifxpacket.h"
@@ -10,7 +10,7 @@
 
 class LifxLAN : public QObject
 {
-    Q_OBJECT
+Q_OBJECT
 
     friend class LightModel;
 public:

@@ -23,7 +23,7 @@ enum LifxMessageType
 
 class LifxPacket : public QObject
 {
-    Q_OBJECT
+Q_OBJECT
 public:
     static QByteArray getFrameHeader(bool tagged);
     static QByteArray getFrameAddress();

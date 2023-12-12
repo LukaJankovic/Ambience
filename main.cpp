@@ -1,5 +1,4 @@
 #include "mainwindow.h"
-#include "light.h"
 
 #include <QApplication>
 #include <QVariant>

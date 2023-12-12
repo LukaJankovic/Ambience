@@ -1,8 +1,8 @@
 #include "lightmodel.h"
 
 LightModel::LightModel(LifxLAN *lifxLAN, QObject *parent)
-    : QAbstractListModel(parent)
-    , lifxLAN(lifxLAN)
+        : QAbstractListModel(parent)
+        , lifxLAN(lifxLAN)
 {
 }
 

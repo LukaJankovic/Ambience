@@ -6,8 +6,8 @@ static QStringList headerLabels = {"Name",
                                    "Brightness"};
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+        : QMainWindow(parent)
+        , ui(new Ui::MainWindow)
 {
     lifxLAN = new LifxLAN();
 

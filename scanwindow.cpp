@@ -6,16 +6,16 @@ enum CustomRoles {
 };
 
 ScanWindow::ScanWindow(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::ScanWindow)
+        QDialog(parent),
+        ui(new Ui::ScanWindow)
 {
     ui->setupUi(this);
 }
 
 ScanWindow::ScanWindow(LifxLAN *lifxLAN, QWidget *parent) :
-    lifxLAN(lifxLAN),
-    QDialog(parent),
-    ui(new Ui::ScanWindow)
+        lifxLAN(lifxLAN),
+        QDialog(parent),
+        ui(new Ui::ScanWindow)
 {
     ui->setupUi(this);
 

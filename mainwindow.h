@@ -4,7 +4,7 @@
 #include <QStandardItemModel>
 #include <QMainWindow>
 #include <QTreeWidget>
-#include <QtNetwork>
+#include <QtNetwork/QtNetwork>
 
 #include "light.h"
 #include "lifxlan.h"
@@ -18,7 +18,7 @@ QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
 {
-    Q_OBJECT
+Q_OBJECT
 
 public:
     MainWindow(QWidget *parent = nullptr);

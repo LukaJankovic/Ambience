@@ -8,7 +8,7 @@
 
 class LightModel : public QAbstractListModel
 {
-    Q_OBJECT
+Q_OBJECT
 
 public:
     explicit LightModel(LifxLAN *lifxLAN, QObject *parent = nullptr);

@@ -1,10 +1,10 @@
 #include "light.h"
 
 Light::Light(QObject *parent)
-    : QObject{parent} {}
+        : QObject{parent} {}
 
 Light::Light(const QHostAddress &address, const QList<quint8> &serial) : address(address),
-    serial(serial)
+                                                                         serial(serial)
 {}
 
 Light::~Light()
@@ -50,14 +50,14 @@ void Light::processPacket(const QByteArray &packet)
 
     switch (LifxPacket::getMessageType(packet))
     {
-    case MsgStateLabel:
-        label = QString(LifxPacket::trimPayload(data));
-        break;
-    case MsgStatePower:
-        power = (data[1] << 8) + data[0];
-        break;
-    default:
-        break;
+        case MsgStateLabel:
+            label = QString(LifxPacket::trimPayload(data));
+            break;
+        case MsgStatePower:
+            power = (data[1] << 8) + data[0];
+            break;
+        default:
+            break;
     }
 }
 
