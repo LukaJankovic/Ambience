@@ -94,8 +94,12 @@ void MainWindow::showLightContextMenu(const QPoint &point)
  */
 void MainWindow::lightSelectionChanged()
 {
-    QModelIndex selection = ui->lightsList->selectionModel()->selection().indexes()[0];
-    currentLight = selection.data(Qt::UserRole).value<Light *>();
+    QItemSelection selection = ui->lightsList->selectionModel()->selection();
+    if (selection.indexes().empty())
+        return;
+
+    QModelIndex index = selection.indexes()[0];
+    currentLight = index.data(Qt::UserRole).value<Light *>();
 
     lifxLAN->sendPacket(currentLight, LifxPacket::getPower(currentLight->getSerial()));
 }
