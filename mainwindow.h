@@ -31,6 +31,7 @@ public slots:
     void lightUpdated(Light *light);
 
     void powerStateChanged(bool clicked);
+    void colorSliderChanged(int value);
 
 private:
     Ui::MainWindow *ui;

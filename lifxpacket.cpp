@@ -182,8 +182,8 @@ QByteArray LifxPacket::getService()
 
 /*!
  * \brief Generates a complete request message without payload.
- * \param Serial of the receiving light.
- * \param Message ID to be sent to the light.
+ * \param target Serial of the receiving light.
+ * \param messageID Message ID to be sent to the light.
  * \return Byte array containing full packet.
  */
 QByteArray LifxPacket::sendRequest(const QList<quint8> &target, unsigned messageID)
@@ -198,8 +198,8 @@ QByteArray LifxPacket::sendRequest(const QList<quint8> &target, unsigned message
 
 /*!
  * \brief Generates a complete setPower packet to be sent
- * \param Serial of the receiving light.
- * \param Requested power level.
+ * \param target Serial of the receiving light.
+ * \param level Requested power level.
  * \return Byte array containing full packet.
  */
 QByteArray LifxPacket::setPower(const QList<quint8> &target, quint16 level)
@@ -210,6 +210,41 @@ QByteArray LifxPacket::setPower(const QList<quint8> &target, quint16 level)
 
     message.append(level & 0xff);
     message.append(level >> 8);
+
+    LifxPacket::fixHeaderSize(message);
+
+    return message;
+}
+
+/*!
+ * \brief Generates a complete setColor packet to be sent
+ * \param target Serial of the receiving light
+ * \param hue
+ * \param saturation
+ * \param brightness
+ * \param kelvin
+ * \return Byte array containing full packet.
+ */
+QByteArray LifxPacket::setColor(const QList<quint8> &target, quint16 hue, quint16 saturation, quint16 brightness, quint16 kelvin)
+{
+    QByteArray message = LifxPacket::getFrameHeader(false);
+
+    message.append(LifxPacket::getFrameAddress(target));
+    message.append(LifxPacket::getProtocolHeader(MsgSetColor));
+
+    message.append((char) 0x00); // 1 reserved byte
+
+    message.append(hue & 0xff);
+    message.append(hue >> 8);
+
+    message.append(saturation & 0xff);
+    message.append(saturation >> 8);
+
+    message.append(brightness & 0xff);
+    message.append(brightness >> 8);
+
+    message.append(kelvin & 0xff);
+    message.append(kelvin >> 8);
 
     LifxPacket::fixHeaderSize(message);
 

@@ -13,17 +13,21 @@ Q_OBJECT
 public:
     explicit Light(QObject *parent = nullptr);
     Light(const QHostAddress &address, const QList<quint8> &serial);
-    Light(const QVariantMap &map);
-    ~Light();
+    explicit Light(const QVariantMap &map);
+    ~Light() override;
 
-    QVariantMap toVariantMap() const;
+    [[nodiscard]] QVariantMap toVariantMap() const;
 
     void processPacket(const QByteArray &packet);
 
-    QHostAddress getAddress() const;
-    QList<quint8> getSerial() const;
-    QString getLabel() const;
-    quint16 getPower() const;
+    [[nodiscard]] QHostAddress getAddress() const;
+    [[nodiscard]] QList<quint8> getSerial() const;
+    [[nodiscard]] QString getLabel() const;
+    [[nodiscard]] quint16 getPower() const;
+    [[nodiscard]] quint16 getHue() const;
+    [[nodiscard]] quint16 getSaturation() const;
+    [[nodiscard]] quint16 getBrightness() const;
+    [[nodiscard]] quint16 getKelvin() const;
 
 private:
 
@@ -33,6 +37,13 @@ private:
 
     QString label;
     quint16 power;
+
+    quint16 hue;
+
+private:
+    quint16 saturation;
+    quint16 brightness;
+    quint16 kelvin;
 };
 
 #endif // LIGHT_H

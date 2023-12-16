@@ -42,13 +42,10 @@ MainWindow::MainWindow(QWidget *parent)
             this,
             &MainWindow::lightSelectionChanged);
 
-    connect(ui->power,
-            &QCheckBox::clicked,
-            this,
-            &MainWindow::powerStateChanged);
-
     setupMenuBar();
     lifxLAN->loadSettings();
+
+    currentLight = nullptr;
 }
 
 MainWindow::~MainWindow()
@@ -102,6 +99,7 @@ void MainWindow::lightSelectionChanged()
     currentLight = index.data(Qt::UserRole).value<Light *>();
 
     lifxLAN->sendPacket(currentLight, LifxPacket::sendRequest(currentLight->getSerial(), MsgGetPower));
+    lifxLAN->sendPacket(currentLight, LifxPacket::sendRequest(currentLight->getSerial(), MsgGetColor));
 }
 
 /*!
@@ -110,16 +108,20 @@ void MainWindow::lightSelectionChanged()
  */
 void MainWindow::lightUpdated(Light *light)
 {
-    if (light != currentLight)
+    if (!currentLight || light != currentLight)
         return;
 
     ui->power->setChecked(light->getPower() != 0);
+    ui->brightness->setValue(light->getBrightness());
+    ui->hue->setValue(light->getHue());
+    ui->temperature->setValue(light->getKelvin());
+    ui->saturation->setValue(light->getSaturation());
 }
 
 /*!
  * \brief Called when the power switch was toggled.
  *        Sends to current light to update power.
- * \param State of the power switch.
+ * \param clicked State of the power switch.
  */
 void MainWindow::powerStateChanged(bool clicked)
 {
@@ -127,6 +129,23 @@ void MainWindow::powerStateChanged(bool clicked)
         return;
 
     lifxLAN->sendPacket(currentLight, LifxPacket::setPower(currentLight->getSerial(), clicked * 32768));
+}
+
+/*!
+ * \brief Called when any color slider is changed.
+ *        Sends new color value(s) to current light.
+ * \param value
+ */
+void MainWindow::colorSliderChanged(int value)
+{
+    if (!currentLight)
+        return;
+
+    lifxLAN->sendPacket(currentLight, LifxPacket::setColor(currentLight->getSerial(),
+                                                           ui->hue->value(),
+                                                           ui->saturation->value(),
+                                                           ui->brightness->value(),
+                                                           ui->temperature->value()));
 }
 
 /*

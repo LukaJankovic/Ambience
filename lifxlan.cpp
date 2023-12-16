@@ -98,6 +98,7 @@ void LifxLAN::loadSettings()
     for (const auto& light : lights)
     {
         Light *l = new Light(light.toMap());
+        sendPacket(l, LifxPacket::sendRequest(l->getSerial(), MsgGetLabel));
         saved.append(l);
     }
 

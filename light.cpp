@@ -56,6 +56,19 @@ void Light::processPacket(const QByteArray &packet)
         case MsgStatePower:
             power = (data[1] << 8) + data[0];
             break;
+        case MsgLightState:
+            hue = (data[1] << 8) + data[0];
+            saturation = (data[3] << 8) + data[2];
+            brightness = (data[5] << 8) + data[4];
+            kelvin = (data[7] << 8) + data[6];
+
+            // 2 reserved bytes
+
+            power = (data[11] << 8) + data[10];
+
+            // TODO label?
+
+            break;
         default:
             break;
     }
@@ -83,4 +96,24 @@ quint16 Light::getPower() const
 QString Light::getLabel() const
 {
     return label;
+}
+
+quint16 Light::getHue() const
+{
+    return hue;
+}
+
+quint16 Light::getSaturation() const
+{
+    return saturation;
+}
+
+quint16 Light::getBrightness() const
+{
+    return brightness;
+}
+
+quint16 Light::getKelvin() const
+{
+    return kelvin;
 }

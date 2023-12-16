@@ -2,6 +2,7 @@
 #define LIFXPACKET_H
 
 #include <QObject>
+#include <QIODevice>
 
 enum LifxMessageType
 {
@@ -9,17 +10,33 @@ enum LifxMessageType
     MsgGetService = 2,
 
     // Get (send to light)
+    MsgGetHostFirmware = 14,
+    MsgGetWifiInfo = 16,
+    MsgGetWifiFirmware = 18,
     MsgGetPower = 20,
     MsgGetLabel = 23,
+    MsgGetVersion = 32,
+    MsgGetInfo = 34,
+    MsgGetLocation = 48,
     MsgGetGroup = 51,
+    MsgEchoRequest = 58,
+
+    MsgGetColor = 101,
+    MsgGetLightPower = 116,
+    MsgGetInfrared = 120,
+    MsgGetHevCycle = 142,
 
     // Set (update light)
     MsgSetPower = 21,
 
+    MsgSetColor = 102,
+
     // State (response)
     MsgStateService = 3,
     MsgStatePower = 22,
-    MsgStateLabel = 25
+    MsgStateLabel = 25,
+
+    MsgLightState = 107,
 };
 
 class LifxPacket : public QObject
@@ -44,6 +61,11 @@ public:
     static QByteArray getService();
 
     static QByteArray setPower(const QList<quint8> &target, quint16 level);
+    static QByteArray setColor(const QList<quint8> &target,
+                               quint16 hue,
+                               quint16 saturation,
+                               quint16 brightness,
+                               quint16 kelvin);
 };
 
 #endif // LIFXPACKET_H
