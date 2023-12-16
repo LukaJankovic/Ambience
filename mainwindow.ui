@@ -36,7 +36,7 @@
        <number>4</number>
       </property>
       <property name="childrenCollapsible">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <widget class="QListView" name="lightsList">
        <property name="sizePolicy">
@@ -196,7 +196,7 @@
      <x>0</x>
      <y>0</y>
      <width>498</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
@@ -237,22 +237,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>saturation</sender>
-   <signal>sliderMoved(int)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>colorSliderChanged(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>460</x>
-     <y>173</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>266</x>
-     <y>228</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>brightness</sender>
    <signal>sliderMoved(int)</signal>
    <receiver>MainWindow</receiver>
@@ -277,6 +261,22 @@
     <hint type="sourcelabel">
      <x>460</x>
      <y>216</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>266</x>
+     <y>228</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>saturation</sender>
+   <signal>sliderMoved(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>colorSliderChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>460</x>
+     <y>173</y>
     </hint>
     <hint type="destinationlabel">
      <x>266</x>

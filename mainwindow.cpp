@@ -42,6 +42,8 @@ MainWindow::MainWindow(QWidget *parent)
             this,
             &MainWindow::lightSelectionChanged);
 
+    ui->splitter->setSizes({INT_MAX, INT_MAX});
+
     setupMenuBar();
     lifxLAN->loadSettings();
 
