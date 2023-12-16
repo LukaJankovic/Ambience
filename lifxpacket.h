@@ -11,6 +11,7 @@ enum LifxMessageType
     // Get (send to light)
     MsgGetPower = 20,
     MsgGetLabel = 23,
+    MsgGetGroup = 51,
 
     // Set (update light)
     MsgSetPower = 21,
@@ -38,11 +39,9 @@ public:
 
     static QByteArray trimPayload(const QByteArray &payload);
 
-    static QByteArray emptyRequest(const QList<quint8> &target, unsigned messageID);
+    static QByteArray sendRequest(const QList<quint8> &target, unsigned messageID);
 
     static QByteArray getService();
-    static QByteArray getLabel(const QList<quint8> &target);
-    static QByteArray getPower(const QList<quint8> &target);
 
     static QByteArray setPower(const QList<quint8> &target, quint16 level);
 };

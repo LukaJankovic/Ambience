@@ -180,7 +180,7 @@ void LifxLAN::messageReceived()
 
         emit scannedUpdated(scanned);
 
-        socket->writeDatagram(LifxPacket::getLabel(light->getSerial()),
+        socket->writeDatagram(LifxPacket::sendRequest(light->getSerial(), MsgGetLabel),
                               light->getAddress(),
                               56700);
     }

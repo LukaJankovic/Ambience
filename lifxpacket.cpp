@@ -186,7 +186,7 @@ QByteArray LifxPacket::getService()
  * \param Message ID to be sent to the light.
  * \return Byte array containing full packet.
  */
-QByteArray LifxPacket::emptyRequest(const QList<quint8> &target, unsigned messageID)
+QByteArray LifxPacket::sendRequest(const QList<quint8> &target, unsigned messageID)
 {
     QByteArray message = LifxPacket::getFrameHeader(false);
     message.append(LifxPacket::getFrameAddress(target));
@@ -194,26 +194,6 @@ QByteArray LifxPacket::emptyRequest(const QList<quint8> &target, unsigned messag
     LifxPacket::fixHeaderSize(message);
 
     return message;
-}
-
-/*!
- * \brief Generates a complete getLabel packet to be sent.
- * \param Serial of the receiving light.
- * \return Byte array containing full packet.
- */
-QByteArray LifxPacket::getLabel(const QList<quint8> &target)
-{
-    return LifxPacket::emptyRequest(target, MsgGetLabel);
-}
-
-/*!
- * \brief Generates a complete getPower packet to be sent.
- * \param Serial of the receiving light.
- * \return Byte array containing full packet.
- */
-QByteArray LifxPacket::getPower(const QList<quint8> &target)
-{
-    return LifxPacket::emptyRequest(target, MsgGetPower);
 }
 
 /*!

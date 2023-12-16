@@ -101,7 +101,7 @@ void MainWindow::lightSelectionChanged()
     QModelIndex index = selection.indexes()[0];
     currentLight = index.data(Qt::UserRole).value<Light *>();
 
-    lifxLAN->sendPacket(currentLight, LifxPacket::getPower(currentLight->getSerial()));
+    lifxLAN->sendPacket(currentLight, LifxPacket::sendRequest(currentLight->getSerial(), MsgGetPower));
 }
 
 /*!
