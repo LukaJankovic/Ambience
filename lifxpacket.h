@@ -33,6 +33,9 @@ enum LifxMessageType
 
     // State (response)
     MsgStateService = 3,
+
+    MsgStateHostFirmware = 15,
+
     MsgStatePower = 22,
     MsgStateLabel = 25,
 

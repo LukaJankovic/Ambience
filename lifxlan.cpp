@@ -14,6 +14,9 @@ LifxLAN::LifxLAN(QObject *parent)
     qDebug() << "Settings path: "<< settings.fileName();
 
     QObject::connect(socket, &QUdpSocket::readyRead, this, &LifxLAN::messageReceived);
+
+    manager = new QNetworkAccessManager(this);
+    downloadProductList();
 }
 
 LifxLAN::~LifxLAN()
@@ -68,7 +71,7 @@ bool LifxLAN::saveScannedLight(Light *light)
 
 /*!
  * \brief Removes a light from saved.
- * \param light To be removed. Must be in saved hash.
+ * \param index Light To be removed. Must be in saved hash.
  * \return true if successful, false otherwise
  */
 bool LifxLAN::removeSavedLight(int index)
@@ -121,17 +124,52 @@ void LifxLAN::saveSettings()
 
 /*!
  * \brief Sends a packet to a light
- * \param Taret light object to receive the message
- * \param Packet to be sent
+ * \param target light object to receive the message
+ * \param packet Packet to be sent
  */
 void LifxLAN::sendPacket(Light *target, QByteArray packet)
 {
     socket->writeDatagram(packet, target->getAddress(), 56700);
 }
 
+void LifxLAN::sendRequest(Light *target, LifxMessageType messageID)
+{
+    sendPacket(target, LifxPacket::sendRequest(target->getSerial(), messageID));
+}
+
 /*
  * Private functions
  */
+
+/*!
+ * \brief Downloads product list from GitHub.
+ */
+void LifxLAN::downloadProductList()
+{
+    const QString URL = "https://raw.githubusercontent.com/LIFX/products/master/products.json";
+
+    QNetworkRequest request{QUrl(URL)};
+    QNetworkReply *reply = manager->get(request);
+
+    connect(reply, &QNetworkReply::finished, [=]() {
+        if (reply->error() == QNetworkReply::NoError) {
+            QByteArray data = reply->readAll();
+            reply->deleteLater();
+
+            QJsonDocument document = QJsonDocument::fromJson(data);
+            productList = document.array()[0].toObject()["products"].toArray();
+
+            /*
+            for (const auto &it : productList) {
+                qInfo() << it.toObject()["name"].toString();
+            }
+            */
+        } else {
+            qInfo() << "Error when downloading product list:" << reply->errorString();
+            reply->deleteLater();
+        }
+    });
+}
 
 /*
  * Private slots

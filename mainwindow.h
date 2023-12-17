@@ -11,6 +11,7 @@
 #include "lightmodel.h"
 
 #include "scanwindow.h"
+#include "infowindow.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -47,6 +48,7 @@ private:
     void setupMenuBar();
 
     void removeLight(QModelIndex index);
+    void showLightInfo(QModelIndex index);
 
     void openScanDialog();
 };

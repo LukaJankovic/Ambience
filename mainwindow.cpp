@@ -71,14 +71,22 @@ void MainWindow::showLightContextMenu(const QPoint &point)
         QMenu *lightMenu = new QMenu();
 
         QAction *removeLightAction = new QAction("Remove light", this);
+        QAction *lightInfo = new QAction("Light info", this);
 
         lightMenu->addAction(removeLightAction);
+        lightMenu->addAction(lightInfo);
 
         QPoint globalPos = ui->lightsList->viewport()->mapToGlobal(point);
         QAction *selectedAction = lightMenu->exec(globalPos);
 
         if (selectedAction == removeLightAction) {
             removeLight(index);
+            return;
+        }
+
+        if (selectedAction == lightInfo) {
+            showLightInfo(index);
+            return;
         }
     }
 }
@@ -176,6 +184,20 @@ void MainWindow::setupMenuBar()
 void MainWindow::removeLight(QModelIndex index)
 {
     lifxLAN->removeSavedLight(index.row());
+}
+
+/*!
+ * \brief Shows a dialog contianing info about the light.
+ * \param index Index of light to show info for.
+ */
+void MainWindow::showLightInfo(QModelIndex index)
+{
+    InfoWindow *infoWindow = new InfoWindow(this);
+
+    infoWindow->setLifxLAN(lifxLAN);
+    infoWindow->setLight(lightsModel->lightAtIndex(index));
+
+    infoWindow->show();
 }
 
 /*!

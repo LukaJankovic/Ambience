@@ -32,6 +32,8 @@ qt_add_executable(ambience main.cpp
         scanwindow.cpp
         scanwindow.h
         scanwindow.ui
+        infowindow.h infowindow.cpp infowindow.ui
+
 )
 target_link_libraries(ambience
         PRIVATE

@@ -69,6 +69,9 @@ void Light::processPacket(const QByteArray &packet)
             // TODO label?
 
             break;
+        case MsgStateHostFirmware:
+
+            break;
         default:
             break;
     }

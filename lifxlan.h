@@ -4,6 +4,11 @@
 #include <QObject>
 #include <QtNetwork/QtNetwork>
 #include <QtAlgorithms>
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
 
 #include "lifxpacket.h"
 #include "light.h"
@@ -23,6 +28,7 @@ public:
     bool removeSavedLight(int index);
 
     void sendPacket(Light *target, QByteArray packet);
+    void sendRequest(Light *target, LifxMessageType messageID);
 
     void loadSettings();
     void saveSettings();
@@ -33,6 +39,12 @@ private:
     QUdpSocket *socket;
     QList<Light *> scanned;
     QList<Light *> saved;
+
+    QNetworkAccessManager *manager;
+
+    QJsonArray productList;
+
+    void downloadProductList();
 
 signals:
     void scannedUpdated(QList<Light *>scanned);
