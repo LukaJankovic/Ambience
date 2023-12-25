@@ -198,6 +198,7 @@ void MainWindow::showLightInfo(QModelIndex index)
     infoWindow->setLight(lightsModel->lightAtIndex(index));
 
     infoWindow->show();
+    infoWindow->loadInfo();
 }
 
 /*!

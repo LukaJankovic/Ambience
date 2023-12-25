@@ -23,6 +23,9 @@ public:
     void setLight(Light *newLight);
     void setLifxLAN(LifxLAN *newLifxLAN);
 
+public slots:
+    void updateLabel(Light *light);
+
 private:
     Ui::InfoWindow *ui;
 

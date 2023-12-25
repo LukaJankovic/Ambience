@@ -35,9 +35,15 @@ enum LifxMessageType
     MsgStateService = 3,
 
     MsgStateHostFirmware = 15,
+    MsgStateWifiInfo = 17,
+    MsgStateWifiFirmware = 19,
 
     MsgStatePower = 22,
     MsgStateLabel = 25,
+    MsgStateVersion = 33,
+    MsgStateInfo = 35,
+    MsgStateLocation = 50,
+    MsgStateGroup = 53,
 
     MsgLightState = 107,
 };

@@ -50,11 +50,88 @@ void Light::processPacket(const QByteArray &packet)
 
     switch (LifxPacket::getMessageType(packet))
     {
-        case MsgStateLabel:
-            label = QString(LifxPacket::trimPayload(data));
+        case MsgStateHostFirmware:
+
+            buildTimestamp = 0;
+            for (int i = 7; i >= 0; i--)
+            {
+                buildTimestamp |= (data[i] << (i * 8));
+            }
+
+            // 8 reserved bytes
+
+            versionMinor = (data[17] << 8) + data[16];
+            versionMajor = (data[19] << 8) + data[18];
+
+            break;
+        case MsgStateWifiInfo:
+            signalStrength = (data[1] << 8) + data[0];
+            break;
+        case MsgStateWifiFirmware:
+
+            wifiBuildTimestamp = 0;
+            for (int i = 7; i >= 0; i--)
+            {
+                wifiBuildTimestamp |= (data[i] << (i * 8));
+            }
+
+            // 8 reserved bytes
+
+            wifiVersionMinor = (data[17] << 8) + data[16];
+            wifiVersionMajor = (data[19] << 8) + data[18];
+
             break;
         case MsgStatePower:
             power = (data[1] << 8) + data[0];
+            break;
+        case MsgStateLabel:
+            label = QString(LifxPacket::trimPayload(data));
+            break;
+        case MsgStateVersion:
+
+            vendor = 0;
+            for (int i = 3; i >= 0; i--)
+            {
+                vendor |= (data[i] << (i * 8));
+            }
+
+            product = 0;
+            for (int i = 3; i >= 0; i--)
+            {
+                product |= (data[i + 8] << (i * 8));
+            }
+
+            break;
+
+        case MsgStateInfo:
+
+            time = 0;
+            for (int i = 7; i >= 0; i--)
+            {
+                time |= (data[i] << (i * 8));
+            }
+
+            uptime = 0;
+            for (int i = 7; i >= 0; i--)
+            {
+                uptime |= (data[i + 8] << (i * 8));
+            }
+
+            downtime = 0;
+            for (int i = 7; i >= 0; i--)
+            {
+                downtime |= (data[i + 16] << (i * 8));
+            }
+
+            break;
+
+        case MsgStateLocation:
+            locationID = QString(data.mid(0, 16));
+            location = QString(LifxPacket::trimPayload(data.mid(16, 32)));
+            break;
+        case MsgStateGroup:
+            groupID = QString(data.mid(0, 16));
+            group = QString(LifxPacket::trimPayload(data.mid(16, 32)));
             break;
         case MsgLightState:
             hue = (data[1] << 8) + data[0];
@@ -67,9 +144,6 @@ void Light::processPacket(const QByteArray &packet)
             power = (data[11] << 8) + data[10];
 
             // TODO label?
-
-            break;
-        case MsgStateHostFirmware:
 
             break;
         default:
@@ -119,4 +193,84 @@ quint16 Light::getBrightness() const
 quint16 Light::getKelvin() const
 {
     return kelvin;
+}
+
+quint64 Light::getBuildTimestamp() const
+{
+    return buildTimestamp;
+}
+
+quint16 Light::getVersionMajor() const
+{
+    return versionMajor;
+}
+
+quint16 Light::getVersionMinor() const
+{
+    return versionMinor;
+}
+
+qfloat16 Light::getSignalStrength() const
+{
+    return signalStrength;
+}
+
+quint64 Light::getWifiBuildTimestamp() const
+{
+    return wifiBuildTimestamp;
+}
+
+quint16 Light::getWifiVersionMajor() const
+{
+    return wifiVersionMajor;
+}
+
+quint16 Light::getWifiVersionMinor() const
+{
+    return wifiVersionMinor;
+}
+
+quint32 Light::getVendor() const
+{
+    return vendor;
+}
+
+quint32 Light::getProduct() const
+{
+    return product;
+}
+
+quint64 Light::getTime() const
+{
+    return time;
+}
+
+quint64 Light::getUptime() const
+{
+    return uptime;
+}
+
+quint64 Light::getDowntime() const
+{
+    return downtime;
+}
+
+QString Light::getGroupID() const
+{
+    return groupID;
+}
+
+QString Light::getLocation() const
+{
+    return location;
+}
+
+QString Light::getLocationID() const
+{
+    return locationID;
+}
+
+QString Light::getGroup() const
+{
+    return group;
 }
