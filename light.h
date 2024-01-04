@@ -6,53 +6,8 @@
 
 #include "lifxpacket.h"
 
-class Light : public QObject
+struct LightData
 {
-Q_OBJECT
-
-public:
-    explicit Light(QObject *parent = nullptr);
-    Light(const QHostAddress &address, const QList<quint8> &serial);
-    explicit Light(const QVariantMap &map);
-    ~Light() override;
-
-    [[nodiscard]] QVariantMap toVariantMap() const;
-
-    void processPacket(const QByteArray &packet);
-
-    [[nodiscard]] QHostAddress getAddress() const;
-    [[nodiscard]] QList<quint8> getSerial() const;
-    [[nodiscard]] QString getLabel() const;
-    [[nodiscard]] QString getGroup() const;
-    [[nodiscard]] QString getGroupID() const;
-    [[nodiscard]] QString getLocation() const;
-    [[nodiscard]] QString getLocationID() const;
-    [[nodiscard]] quint16 getPower() const;
-    [[nodiscard]] quint16 getHue() const;
-    [[nodiscard]] quint16 getSaturation() const;
-    [[nodiscard]] quint16 getBrightness() const;
-    [[nodiscard]] quint16 getKelvin() const;
-    [[nodiscard]] quint64 getBuildTimestamp() const;
-    [[nodiscard]] quint16 getVersionMajor() const;
-    [[nodiscard]] quint16 getVersionMinor() const;
-    [[nodiscard]] qfloat16 getSignalStrength() const;
-    [[nodiscard]] quint64 getWifiBuildTimestamp() const;
-    [[nodiscard]] quint16 getWifiVersionMajor() const;
-    [[nodiscard]] quint16 getWifiVersionMinor() const;
-    [[nodiscard]] quint32 getVendor() const;
-    [[nodiscard]] quint32 getProduct() const;
-    [[nodiscard]] quint64 getTime() const;
-    [[nodiscard]] quint64 getUptime() const;
-    [[nodiscard]] quint64 getDowntime() const;
-
-private:
-
-    // Basic info
-    QHostAddress address;
-    QList<quint8> serial;
-
-    QString label;
-
     QString group;
     QString groupID;
 
@@ -85,6 +40,36 @@ private:
     quint64 time;
     quint64 uptime;
     quint64 downtime;
+};
+
+class Light : public QObject
+{
+Q_OBJECT
+
+public:
+    explicit Light(QObject *parent = nullptr);
+    Light(const QHostAddress &address, const QList<quint8> &serial);
+    explicit Light(const QVariantMap &map);
+    ~Light() override;
+
+    [[nodiscard]] QVariantMap toVariantMap() const;
+
+    void processPacket(const QByteArray &packet);
+
+    [[nodiscard]] QHostAddress getAddress() const;
+    [[nodiscard]] QList<quint8> getSerial() const;
+    [[nodiscard]] QString getLabel() const;
+    [[nodiscard]] LightData getLightData() const;
+
+private:
+
+    // Basic info
+    QHostAddress address;
+    QList<quint8> serial;
+    QString label;
+
+    LightData lightData;
+
 
 };
 

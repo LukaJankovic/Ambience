@@ -49,22 +49,22 @@ void InfoWindow::updateLabel(Light *light)
     QString infoText;
 
     infoMap.append(qMakePair("Label", light->getLabel()));
-    infoMap.append(qMakePair("Group", light->getGroup()));
-    infoMap.append(qMakePair("Location", light->getLocation()));
-    infoMap.append(qMakePair("Build Timestamp", QString::number(light->getBuildTimestamp())));
+    infoMap.append(qMakePair("Group", light->getLightData().group));
+    infoMap.append(qMakePair("Location", light->getLightData().location));
+    infoMap.append(qMakePair("Build Timestamp", QString::number(light->getLightData().buildTimestamp)));
     infoMap.append(qMakePair("Version", QString("%1.%2").arg(
-        QString::number(light->getVersionMajor()),
-        QString::number(light->getVersionMinor()))));
-    infoMap.append(qMakePair("Signal Strength", QString::number(light->getSignalStrength())));
-    infoMap.append(qMakePair("Wifi Build Timestamp", QString::number(light->getWifiBuildTimestamp())));
+        QString::number(light->getLightData().versionMajor),
+        QString::number(light->getLightData().versionMinor))));
+    infoMap.append(qMakePair("Signal Strength", QString::number(light->getLightData().signalStrength)));
+    infoMap.append(qMakePair("Wifi Build Timestamp", QString::number(light->getLightData().wifiBuildTimestamp)));
     infoMap.append(qMakePair("Wifi Version", QString("%1.%2").arg(
-        QString::number(light->getWifiVersionMajor()),
-        QString::number(light->getWifiVersionMinor()))));
+        QString::number(light->getLightData().wifiVersionMajor),
+        QString::number(light->getLightData().wifiVersionMinor))));
     infoMap.append(qMakePair("Vendor:Product", QString("%1.%2").arg(
-                                                   light->getVendor(), light->getProduct())));
-    infoMap.append(qMakePair("Time", QString::number(light->getTime())));
-    infoMap.append(qMakePair("Uptime", QString::number(light->getUptime())));
-    infoMap.append(qMakePair("Downtime", QString::number(light->getDowntime())));
+                                                   light->getLightData().vendor, light->getLightData().product)));
+    infoMap.append(qMakePair("Time", QString::number(light->getLightData().time)));
+    infoMap.append(qMakePair("Uptime", QString::number(light->getLightData().uptime)));
+    infoMap.append(qMakePair("Downtime", QString::number(light->getLightData().downtime)));
 
     for (const auto &it : infoMap)
     {

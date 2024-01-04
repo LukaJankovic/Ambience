@@ -121,11 +121,11 @@ void MainWindow::lightUpdated(Light *light)
     if (!currentLight || light != currentLight)
         return;
 
-    ui->power->setChecked(light->getPower() != 0);
-    ui->brightness->setValue(light->getBrightness());
-    ui->hue->setValue(light->getHue());
-    ui->temperature->setValue(light->getKelvin());
-    ui->saturation->setValue(light->getSaturation());
+    ui->power->setChecked(light->getLightData().power != 0);
+    ui->brightness->setValue(light->getLightData().brightness);
+    ui->hue->setValue(light->getLightData().hue);
+    ui->temperature->setValue(light->getLightData().kelvin);
+    ui->saturation->setValue(light->getLightData().saturation);
 }
 
 /*!
